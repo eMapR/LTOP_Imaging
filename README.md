@@ -337,40 +337,79 @@ year in the time series. With the medoid time series, we use the beginning, midd
 
 #### Create Abstract image with CSV (python) 
 
-	1. Input
+	1) Input
 
+		/vol/v1/proj/LTOP_Oregon/tables/abstract_sample_gee/LTOP_Oregon_Abstract_Sample_annualSRcollection_Tranformed_NBRTCWTCGNDVIB5_v1.csv
 
-	2. Outputs
+	2) Outputs
 
 		a) image directory
 
-
+			/vol/v1/proj/LTOP_Oregon/rasters/03_AbstractImage/
 
 		b) SHP directory
 
+			/vol/v1/proj/LTOP_Oregon/vectors/03_abstract_image_pixel_points/
+
+	3) Conda 
+
+		conda activate geo_env
+
+	4) Run Command  
+
+		python csv_to_abstract_images.py
 
 
-	3. Run Command  
+
+#### Upload rasters to GEE and make image collection
+
+	1) From location
+
+		/vol/v1/proj/LTOP_Oregon/rasters/03_AbstractImage
+
+	2) make folder in GEE asseset to hold all the images 
+
+	3) Upload all images to assest folder 
+
+	4) Make image collection in GEE assets tab
+
+	5) add each abstract image to image collection
 
 
 
 
+#### Upload SHP to GEE
 
-3. Upload rasters to GEE 
+	1) From location
 
-4. 1. ...
+		/vol/v1/proj/LTOP_Oregon/vectors
 
-5. Make image collection from rasters 
+	2) zip files
 
-6. 1. ...
+		zip -r 03_abstract_image_pixel_points.zip 03_abstract_image_pixel_points/
 
-7. Run Abstract imager for each index 
+	3) Upload to GEE 
 
-8. 1. ...
 
-9. Download CSV ‘s one for each index 
+#### Run Abstract imager for each index 
 
-10. 1. ...
+	1) Edit/Review 
+
+		/vol/v1/proj/LTOP_Oregon/scripts/GEEjs/04abstractImager.js
+
+	2) copy and paste in GEE console
+
+	3) check to make sure runParams pasted correctly (super long list)
+
+	4) run script for each index 'NBR', 'NDVI', 'TCG', 'TCW', 'B5'
+
+		a) editing line 18 to change index name
+ 
+
+#### Download folder containing CSV‘s one for each index 
+
+
+
 
 11. Run scoring scripts
 
