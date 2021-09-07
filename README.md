@@ -277,7 +277,7 @@ year in the time series. With the medoid time series, we use the beginning, midd
 
 
 
-####**Get single point for each cluster**
+#### **Get single point for each cluster**
 
 	1) location
 
@@ -337,13 +337,24 @@ year in the time series. With the medoid time series, we use the beginning, midd
 
 #### Create Abstract image with CSV (python) 
 
-2. 1. Input
+	1. Input
 
-   2. 1. SERVIR_abstractSampler_annualSRcollectionTranformed_NBRTCWTCGNDVIB5_sampleTable_v7.csv
 
-   3. Outputs
+	2. Outputs
 
-   4. 
+		a) image directory
+
+
+
+		b) SHP directory
+
+
+
+	3. Run Command  
+
+
+
+
 
 3. Upload rasters to GEE 
 
