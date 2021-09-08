@@ -6,9 +6,6 @@ A large obstacle in using LandTrendr in GEE, is knowing which configuration of L
 
 Traditionally, LandTrendr is run over an image collection with a single LandTrendr parameter configuration and is able to remove natural variation for every pixel time series in an image. But no individual LandTrendr parameter configuration is best for all surface conditions, where forest may respond well to one configuration, but many under or over emphasize stabilization in another land class. Thus here we aim to delineate patches of spectrally similar pixels from the imagery, find what LandTrendr parameters work best for each patch group, and run LandTrendr on each patch group location with that best parameter configuration. 
 
-In short, we take a times series of Landsat imagery, remove atmospheric contamination, and then reduce the images for each year to a single medoid composite. This gives a single image for each 
-year in the time series. With the medoid time series, we use the beginning, middle and end year images in the SNIC (Simple Non-iterative Clustering) algorithm, which groups pixels that are spectrally similar to one another into clusters. Each cluster is independent of the other clusters, our next step uses K-Means to group independent clusters that are similar to one another. Then, we use the augmented parameter selection process to choose the LandTrendr parameters that work best for each cluster group. Landtrendr is then run on the medoid composite yearly time series for each cluster group location with its choosin LandTrendr parameter. This process not only augments the Landtrendr selection process but also runs LandTrendr on a patch level where each patch group has its own LandTrendr parameter.
-
 ### Steps Overview
 
 1) Edit and run /scripts/GEEjs/01SNICPatches.js
