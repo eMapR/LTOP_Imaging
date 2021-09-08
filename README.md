@@ -404,11 +404,26 @@ year in the time series. With the medoid time series, we use the beginning, midd
 	4) run script for each index 'NBR', 'NDVI', 'TCG', 'TCW', 'B5'
 
 		a) editing line 18 to change index name
- 
+
+	5) output folder name 
+
+		LTOP_Oregon_abstractImageSamples_5000pts_v2 
 
 #### Download folder containing CSV‘s one for each index 
 
+	1) script location 
 
+		/vol/v1/proj/LTOP_Oregon/scripts/GEEjs/
+
+	2) Run Command 
+
+		conda activate py35
+
+		python 1_get_chunks_from_gdrive.py LTOP_Oregon_abstractImageSamples_5000pts_v2 /vol/v1/proj/LTOP_Oregon/tables/LTOP_Oregon_Abstract_Image_LT_data/
+
+	3) output location 
+
+		/vol/v1/proj/LTOP_Oregon/tables/LTOP_Oregon_Abstract_Image_LT_data/
 
 
 11. Run scoring scripts
