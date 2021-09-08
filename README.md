@@ -150,15 +150,19 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
  		/vol/v1/proj/LTOP_Oregon/vectors/01_SNIC/03_snic_seed_pixel_points_attributted_random_subset_75k/03_snic_seed_pixel_points_attributted_random_subset_75k.shp
 
 
-#### 8 **Upload sample to gee** 
+#### 8 **Upload sample to gee**
 
-	1. Zip shape file 
+	1. file location 
+
+		/vol/v1/proj/LTOP_Oregon/vectors/01_SNIC/03_snic_seed_pixel_points_attributted_random_subset_75k/ 
+
+	2. Zip shape files in directory
 
 		zip -r 03_snic_seed_pixel_points_attributted_random_subset_75k.zip 03_snic_seed_pixel_points_attributted_random_subset_75k/ 
 
-	2. Up load to GEE as asset
+	3. Up load to GEE as asset
 
-	3. GEE Asset location 
+	4. GEE Asset location 
 
 		users/emaprlab/03_snic_seed_pixel_points_attributted_random_subset_75k
 
@@ -166,15 +170,22 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 
 #### 9 Kmeans of SNIC
+	
+	1. script local location
 
-	1. Run GEE Kmeans on SNIC image with training data from 03_snic_seed_pixel_points_attributted_random_subset_75k.shp
+		/vol/v1/proj/LTOP_Oregon/scripts/GEEjs/02kMeansCluster.js 
 
-		5000 clusters
+	2. copy and paste script into GEE console 
+	
+	2. Make sure you all needed dependances 
 
-	2. Run GEE Kmeans on SNIC seed image with training data from 03_snic_seed_pixel_points_attributted_random_subset_75k.shp
+	3. Review in script parameters.
 
-		5000 clusters
+		
 
+	4. Run script
+
+	5. Run tasks
 
 
 #### 10 **Export KMeans image to islay** 
