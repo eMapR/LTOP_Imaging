@@ -426,11 +426,35 @@ year in the time series. With the medoid time series, we use the beginning, midd
 		/vol/v1/proj/LTOP_Oregon/tables/LTOP_Oregon_Abstract_Image_LT_data/
 
 
-11. Run scoring scripts
+#### Run LT Parameter Scoring scripts
 
-12. 1. ..
+	1) script locaton
+
+		/vol/v1/proj/LTOP_Oregon/scripts/lt_seletor/ltop_lt_parameter_selector.py 
+
+	2) Edit line 119 as the input directory of csv files
+
+		a) input directory 
+
+			/vol/v1/proj/LTOP_Oregon/tables/LTOP_Oregon_Abstract_Image_LT_data/
+
+
+	3) Edit line 653 as the output csv file
+
+		a) output line 563
+
+			/vol/v1/proj/LTOP_Oregon/tables/LTOP_Oregon_selected_config/LTOP_Oregon_selected_config.csv
+
+	4) run script
+
+		conda activate geo_env
+
+		python /vol/v1/proj/LTOP_Oregon/scripts/lt_seletor/ltop_lt_parameter_selector.py
+
+
 
 13. Upload LTOP selected csv to GEE
+13. Upload kmeans cluster image to GEE
 
 14. 1. …
 
