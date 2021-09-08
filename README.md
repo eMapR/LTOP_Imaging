@@ -12,13 +12,17 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 ![img](https://lh4.googleusercontent.com/qpYv4_Q9InR0_LBzk1vdtIWhfLmMRNwZ840DSv6h0CzETzPjd2n6pgQP24eiHFQLfTKp3Tr17yLoqwdRfPeNb_YyktC60kTGnQulL7UwiLoQit-OyJJ3H_vI25-GE06J20ab_YeO=s0)
 
-#### 1 Run GEE [script](https://code.earthengine.google.com/bc7d5c6e42f2d738a9fe140c316adea0) to generate SNIC images (01SNICPatches.js) (cambodia 15min )
+#### 1 Run 01SNICPatches in GEE to generate SNIC images
 
-1. Open script in GEE console 
-2. Make sure you all needed dependances (emapr GEE account has all dependances) 
-3. Review in script parameters. Lines 35-39, lines 47-49 (SNIC years), lines 83,84 (SNIC)
-4. Run script (01SNICPatches)
-5. Run tasks
+	1. Open script in GEE console 
+	
+	2. Make sure you all needed dependances (emapr GEE account has all dependances) 
+
+	3. Review in script parameters. Lines 35-39, lines 47-49 (SNIC years), lines 83,84 (SNIC)
+
+	4. Run script (01SNICPatches)
+
+	5. Run tasks
 
 #### 2 Getting data  from the Google drive to Islay
 
