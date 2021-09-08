@@ -6,7 +6,7 @@ A large obstacle in using LandTrendr in GEE, is knowing which configuration of L
 
 Traditionally, LandTrendr is run over an image collection with a single LandTrendr parameter configuration and is able to remove natural variation for every pixel time series in an image. But no individual LandTrendr parameter configuration is best for all surface conditions, where forest may respond well to one configuration, but many under or over emphasize stabilization in another land class. Thus here we aim to delineate patches of spectrally similar pixels from the imagery, find what LandTrendr parameters work best for each patch group, and run LandTrendr on each patch group location with that best parameter configuration. 
 
-### LTOP WorkFlow (Step by Step) 
+### LTOP Work Flow (Step by Step) 
 
 [GEE link](https://code.earthengine.google.com/https://code.earthengine.google.com/?accept_repo=users/emaprlab/SERVIR) open with Emapr Account for dependencies 
 
@@ -20,7 +20,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	1. Copy and paste script in GEE console 
 	
-	2. Make sure you all needed dependances (emapr GEE account has all dependances) 
+	2. Make sure you all needed dependencies (emapr GEE account has all dependencies) 
 
 	3. Review in script parameters. Lines 35-39, lines 47-49 (SNIC years), lines 83,84 (SNIC)
 
@@ -36,7 +36,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 		conda activate py35
 
-	3. This script bring data from the google drive to Islay 
+	3. This script bring data from the Google drive to Islay 
 
 		./LTOP_Oregon/scripts/GEEjs/00_get_chunks_from_gdrive.py
 
@@ -81,7 +81,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 			./LTOP_Oregon/rasters/01_SNIC/snic_seed.vrt
 
-			./LTOP_Oregon/rasters/01_SNIC/snic_image.vrt	(I dont think this is used in the workflow?)		
+			./LTOP_Oregon/rasters/01_SNIC/snic_image.vrt	(I don't think this is used in the work flow?)		
 
 
 #### 4 Raster calc clipped seed image to keep only seed pixels (QGIS)
@@ -98,7 +98,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	Note: 
 		This raster calculation change the 0 pixel values to no data in Q-gis. However, this also 
-		changes a seed id pixel to no data aswell. But one out of hundreds of millions pixels is 
+		changes a seed id pixel to no data as well. But one out of hundreds of millions pixels is 
 		inconsequential.
 
 
@@ -180,7 +180,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	2. copy and paste script into GEE console 
 	
-	2. Make sure you all needed dependances 
+	2. Make sure you all needed dependencies 
 
 	3. Review in script parameters.
 
@@ -190,7 +190,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 		task to drive 
 
-			seed image to google drive
+			seed image to Google drive
 
 				./LTOP_Oregon/rasters/02_Kmeans/LTOP_Oregon_Kmeans_seed_image.tif
 
@@ -201,7 +201,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 				users/emaprlab/LTOP_Oregon_Kmeans_Cluster_Image
 
 
-#### 10 **Export KMeans seed image to islay** 
+#### 10 **Export KMeans seed image to Islay** 
 
 	0. Open terminal on Islay in a VNC
 
@@ -295,7 +295,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	2. copy and paste script into GEE console 
 	
-	2. Make sure you all needed dependances 
+	2. Make sure you all needed dependencies 
 
 	3. Review in script parameters.
 
@@ -355,9 +355,9 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 		./LTOP_Oregon/rasters/03_AbstractImage/
 
-	2) make folder in GEE asseset to hold all the images 
+	2) make folder in GEE assets to hold all the images 
 
-	3) Upload all images to assest folder 
+	3) Upload all images to assets folder 
 
 	4) Make image collection in GEE assets tab
 
@@ -377,7 +377,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 	3) Upload to GEE 
 
 
-#### 20 Run Abstract imager for each index 
+#### 20 Run Abstract image for each index 
 
 	1. script local location
 
@@ -385,7 +385,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	2. copy and paste script into GEE console 
 	
-	2. Make sure you all needed dependances 
+	2. Make sure you all needed dependencies 
 
 	3. Review in script parameters.
 
