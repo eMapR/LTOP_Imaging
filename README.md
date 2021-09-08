@@ -192,6 +192,8 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 			seed image to google drive
 
+				./LTOP_Oregon/rasters/02_Kmeans/LTOP_Oregon_Kmeans_seed_image.tif
+
 		task to assets
 
 			kmeans cluster image to GEE assets
@@ -274,7 +276,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	1) location 
 
-		./LTOP_Oregon/vectors/02_Kmeans/
+		./LTOP_Oregon/vectors/02_Kmeans/LTOP_Oregon_Kmeans_Cluster_ID_reps/
 	
 	2) zip folder 
 
@@ -286,32 +288,48 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 #### 15 **Abstract sample of Landsat Collections with 5000 Kmeans cluster reps** (GEE)
 
-	1) Edit/Review parameters in 03abstractSampler.js
 
-	2) Run 03abstractSampler.js in GEE
+	1. script local location
 
-	3) output
+		./LTOP_Oregon/scripts/GEEjs/03abstractSampler.js
 
-		LTOP_Oregon_Abstract_Sample_annualSRcollection_Tranformed_NBRTCWTCGNDVIB5_v1.csv		
+	2. copy and paste script into GEE console 
+	
+	2. Make sure you all needed dependances 
+
+	3. Review in script parameters.
+
+	4. Run script
+
+	5. Run tasks
+
+		task to drive 
+
+			LTOP_Oregon_Abstract_Sample_annualSRcollection_Tranformed_NBRTCWTCGNDVIB5_v1.csv		
+
 
 #### 16 Download CSV from Google Drive
 
-	1) Download
+	1) Download from Google Drive
 
 		LTOP_Oregon_Abstract_Sample_annualSRcollection_Tranformed_NBRTCWTCGNDVIB5_v1.csv
 
 	2) location (islay)
 
-		./LTOP_Oregon/tables/abstract_sample_gee
+		./LTOP_Oregon/tables/abstract_sample_gee/
 
 
 #### 17 Create Abstract image with CSV (python) 
 
-	1) Input
+	1) Script Location 
+
+		./LTOP_Oregon/scripts/abstractImageSampling/csv_to_abstract_images.py
+
+	2) Input
 
 		./LTOP_Oregon/tables/abstract_sample_gee/LTOP_Oregon_Abstract_Sample_annualSRcollection_Tranformed_NBRTCWTCGNDVIB5_v1.csv
 
-	2) Outputs
+	3) Outputs
 
 		a) image directory
 
@@ -321,11 +339,11 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 			./LTOP_Oregon/vectors/03_abstract_image_pixel_points/
 
-	3) Conda 
+	4) Conda 
 
 		conda activate geo_env
 
-	4) Run Command  
+	5) Run Command  
 
 		python csv_to_abstract_images.py
 
@@ -333,9 +351,9 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 #### 18 Upload rasters to GEE and make image collection
 
-	1) From location
+	1) Raster location
 
-		./LTOP_Oregon/rasters/03_AbstractImage
+		./LTOP_Oregon/rasters/03_AbstractImage/
 
 	2) make folder in GEE asseset to hold all the images 
 
@@ -346,11 +364,9 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 	5) add each abstract image to image collection
 
 
-
-
 #### 19 Upload SHP to GEE
 
-	1) From location
+	1) SHP file location
 
 		./LTOP_Oregon/vectors
 
@@ -363,27 +379,41 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 #### 20 Run Abstract imager for each index 
 
-	1) Edit/Review 
+	1. script local location
 
 		./LTOP_Oregon/scripts/GEEjs/04abstractImager.js
 
-	2) copy and paste in GEE console
+	2. copy and paste script into GEE console 
+	
+	2. Make sure you all needed dependances 
 
-	3) check to make sure runParams pasted correctly (super long list)
+	3. Review in script parameters.
 
-	4) run script for each index 'NBR', 'NDVI', 'TCG', 'TCW', 'B5'
+		a) check to make sure runParams pasted correctly (super long list)
 
-		a) editing line 18 to change index name
+		b) run script for each index 'NBR', 'NDVI', 'TCG', 'TCW', 'B5'
 
-	5) output folder name 
+			i) editing line 18 to change index name
 
-		LTOP_Oregon_abstractImageSamples_5000pts_v2 
+	4. Run script
 
+	5. Run tasks
+
+		task to drive (CSV) 
+
+			LTOP_Oregon_abstractImageSamples_5000pts_v2/
+							
+							LTOP_Oregon_abstractImageSample_5000pts_lt_144params_B5_v2.csv
+							LTOP_Oregon_abstractImageSample_5000pts_lt_144params_NBR_v2.csv
+							LTOP_Oregon_abstractImageSample_5000pts_lt_144params_NDVI_v2.csv
+							LTOP_Oregon_abstractImageSample_5000pts_lt_144params_TCG_v2.csv
+							LTOP_Oregon_abstractImageSample_5000pts_lt_144params_TCW_v2.csv
+ 
 #### 21 Download folder containing CSV‘s one for each index 
 
 	1) script location 
 
-		./LTOP_Oregon/scripts/GEEjs/
+		./LTOP_Oregon/scripts/GEEjs/00_get_chunks_from_gdrive.py
 
 	2) Run Command 
 
