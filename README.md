@@ -404,14 +404,42 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 		python /vol/v1/proj/LTOP_Oregon/scripts/lt_seletor/ltop_lt_parameter_selector.py
 
+#### 23 Run LTOP Parameter Selecting Script
+
+	1) script location
+
+		/vol/v1/proj/LTOP_Oregon/scripts/lt_seletor/02_ltop_select_top_parameter_configuration.py
+
+	2) Edit and review script
+
+		input file path line 6
+
+			/vol/v1/proj/LTOP_Oregon/tables/LTOP_Oregon_config_scores/LTOP_Oregon_config_scores.csv
+
+		output file path line 7
+
+			/vol/v1/proj/LTOP_Oregon/tables/LTOP_Oregon_selected_configurations/LTOP_Oregon_config_selected.csv
+
+	3) run script
+
+		conda base
+
+		python /vol/v1/proj/LTOP_Oregon/scripts/lt_seletor/02_ltop_select_top_parameter_configuration.py
+
+#### 24 Upload CSV to GEE
 
 
-13. Upload LTOP selected csv to GEE
-13. Upload kmeans cluster image to GEE
 
-14. 1. …
+#### 25 Upload Kmeans Cluster image to GEE
 
-15. Run GEE …
 
-16. 1. ...
 
+#### 26 Generate LTOP image in GEE
+
+	1) script location
+
+	2) Edit and review script
+
+	3) run script
+	
+#### 27 Download LTOP imagery
