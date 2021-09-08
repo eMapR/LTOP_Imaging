@@ -78,7 +78,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 			/vol/v1/proj/LTOP_Oregon/rasters/01_SNIC/snic_seed.vrt
 
-			/vol/v1/proj/LTOP_Oregon/rasters/01_SNIC/snic_image.vrt			
+			/vol/v1/proj/LTOP_Oregon/rasters/01_SNIC/snic_image.vrt	(I dont think this is used in the workflow?)		
 
 
 #### 4 Raster calc clipped seed image to keep only seed pixels (QGIS)
@@ -169,7 +169,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 
 
-#### 9 Kmeans of SNIC
+#### 9 Kmeans cluster from SNIC patches (GEE) 
 	
 	1. script local location
 
@@ -181,32 +181,45 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	3. Review in script parameters.
 
-		
-
 	4. Run script
 
 	5. Run tasks
 
+		task to drive 
 
-#### 10 **Export KMeans image to islay** 
+			seed image to google drive
 
-	1. Run script 1_get_chunks_from_gdrive.py
+		task to assets
 
-		(py35) python 1_get_chunks_from_gdrive.py LTOP_Oregon_Kmeans_v1 /vol/v1/proj/LTOP_Oregon/rasters/02_Kmeans/gee/
+			kmeans cluster image to GEE assets
+
+				users/emaprlab/LTOP_Oregon_Kmeans_Cluster_Image
 
 
+#### 10 **Export KMeans seed image to islay** 
+
+	0. Open terminal on Islay in a VNC
 
 
+	1. Script location 
 
-#### 11 **Merge GEE tiff chunks** 
+		/vol/v1/proj/LTOP_Oregon/scripts/GEEjs/
 
-	2. 1. Location
+	2. Activate conda environment “py35”
 
-		/vol/v1/proj/LTOP_Oregon/rasters/02_Kmeans/gee
+		conda activate py35
 
-	1. Image 
+	3. Python script syntax
 
-		gdal_merge.py *.tif -o ../LTOP_Oregon_Kmeans_cluster_image.tif
+		python 00_get_chunks_from_gdrive.py <google drive folder name> <local directory>
+
+	4. Python Command
+
+		python /vol/v1/proj/LTOP_Oregon/scripts/GEEjs/00_get_chunks_from_gdrive.py LTOP_Oregon_Kmeans_v1 /vol/v1/proj/LTOP_Oregon/rasters/02_Kmeans/gee/
+
+	3. output location
+
+		/vol/v1/proj/LTOP_Oregon/rasters/02_Kmeans/gee/
 
 
 #### 12 **Sample Kmeans raster** (QGIS - Sample Raster Values)
@@ -215,7 +228,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 		a)Input 
 
-			/vol/v1/proj/LTOP_Oregon/rasters/02_Kmeans/LTOP_Oregon_Kmeans_cluster_image.tif
+			/vol/v1/proj/LTOP_Oregon/rasters/02_Kmeans/LTOP_Oregon_Kmeans_seed_image.tif
 
 			/vol/v1/proj/LTOP_Oregon/vectors/01_SNIC/01_snic_seed_pixel_points/01_snic_seed_pixel_points.shp
 
@@ -252,6 +265,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	4) run script
 
+		python /vol/v1/proj/LTOP_Oregon/scripts/kMeanClustering/randomDistinctSampleOfKmeansClusterIDs_v2.py
 
 #### 14 Upload SHP file of 5000 Kmeans cluster IDs points to GEE
 
@@ -383,7 +397,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	1) script locaton
 
-		/vol/v1/proj/LTOP_Oregon/scripts/lt_seletor/ltop_lt_parameter_selector.py 
+		/vol/v1/proj/LTOP_Oregon/scripts/lt_seletor/01_ltop_lt_parameter_scoring.py
 
 	2) Edit line 119 as the input directory of csv files
 
@@ -402,7 +416,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 		conda activate geo_env
 
-		python /vol/v1/proj/LTOP_Oregon/scripts/lt_seletor/ltop_lt_parameter_selector.py
+		python /vol/v1/proj/LTOP_Oregon/scripts/lt_seletor/01_ltop_lt_parameter_scoring.py
 
 #### 23 Run LTOP Parameter Selecting Script
 
@@ -428,12 +442,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 #### 24 Upload CSV to GEE
 
-
-
-#### 25 Upload Kmeans Cluster image to GEE
-
-
-
+	
 #### 26 Generate LTOP image in GEE
 
 	1) script location
