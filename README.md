@@ -24,7 +24,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	5. Run tasks
 
-#### 2 Getting data  from the Google drive to Islay
+#### 2 Getting SNIC data from the Google drive to Islay
 
 	1. Open terminal on Islay in a VNC
 
@@ -32,16 +32,15 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 		conda activate py35
 
-	1. This script bring data from the google drive to Islay 
+	3. This script bring data from the google drive to Islay 
 
-		/vol/v1/proj/SERVIR/v2_revision/LandTrendrOptimization/GEEjs/1_get_chunks_from_gdrive.py
+		/vol/v1/proj/LTOP_Oregon/scripts/GEEjs/00_get_chunks_from_gdrive.py
 
-	1. Run script 
+	4. Run script 
 
-		python /vol/v1/proj/SERVIR/v2_revision/LandTrendrOptimization/GEEjs/1_get_chunks_from_gdrive.py CambodiaSNIC_v6 /vol/v1/proj/SERVIR/v2_revision/rasters/SNIC_imagery/gee/
+		python /vol/v1/proj/LTOP_Oregon/scripts/GEEjs/00_get_chunks_from_gdrive.py LTOP_Oregon_SNIC_v1 /vol/v1/proj/LTOP_Oregon/rasters/01_SNIC/
 
-
-	1. Check data at download destination. 
+	5. Check data at download destination. 
 
 		/vol/v1/proj/LTOP_Oregon/rasters/01_SNIC/
 
@@ -386,7 +385,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 		conda activate py35
 
-		python 1_get_chunks_from_gdrive.py LTOP_Oregon_abstractImageSamples_5000pts_v2 /vol/v1/proj/LTOP_Oregon/tables/LTOP_Oregon_Abstract_Image_LT_data/
+		python 00_get_chunks_from_gdrive.py LTOP_Oregon_abstractImageSamples_5000pts_v2 /vol/v1/proj/LTOP_Oregon/tables/LTOP_Oregon_Abstract_Image_LT_data/
 
 	3) output location 
 
@@ -442,13 +441,46 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 #### 24 Upload CSV to GEE
 
+	1) CSV location 
+
+		/vol/v1/proj/LTOP_Oregon/tables/LTOP_Oregon_selected_configurations/LTOP_Oregon_config_selected.csv
+
+	2) Upload CSV as an asset to GEE	
+
 	
 #### 26 Generate LTOP image in GEE
 
 	1) script location
 
+		/vol/v1/proj/LTOP_Oregon/scripts/GEEjs/05lt-Optumum-Imager.js
+
 	2) Edit and review script
 
 	3) run script
+
+	4) Run Task
 	
 #### 27 Download LTOP imagery
+
+	0. Open terminal on Islay in a VNC
+
+
+	1. Script location 
+
+		/vol/v1/proj/LTOP_Oregon/scripts/GEEjs/
+
+	2. Activate conda environment “py35”
+
+		conda activate py35
+
+	3. Python script syntax
+
+		python 00_get_chunks_from_gdrive.py <google drive folder name> <local directory>
+
+	4. Run script 
+
+		python /vol/v1/proj/LTOP_Oregon/scripts/GEEjs/00_get_chunks_from_gdrive.py
+
+	5. Check data at download destination. 
+
+		/vol/v1/proj/LTOP_Oregon/rasters/01_SNIC/
