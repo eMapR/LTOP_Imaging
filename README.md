@@ -12,7 +12,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 ![img](https://lh4.googleusercontent.com/qpYv4_Q9InR0_LBzk1vdtIWhfLmMRNwZ840DSv6h0CzETzPjd2n6pgQP24eiHFQLfTKp3Tr17yLoqwdRfPeNb_YyktC60kTGnQulL7UwiLoQit-OyJJ3H_vI25-GE06J20ab_YeO=s0)
 
-#### 1 Run 01SNICPatches in GEE to generate SNIC images
+#### 1 Run 01SNICPatches in GEE to generate SNIC images (GEE)
 
 	0. Script location
 
@@ -28,7 +28,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	5. Run tasks
 
-#### 2 Getting SNIC data from the Google drive to Islay
+#### 2 Getting SNIC data from the Google drive to Islay (Moving Data)
 
 	1. Open terminal on Islay in a VNC
 
@@ -48,7 +48,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 		./LTOP_Oregon/rasters/01_SNIC/
 
-#### 3 Merge image chunks into two vrt 
+#### 3 Merge image chunks into two virtual raster (GDAL)
 
 	1. Activate conda environment
 
@@ -84,7 +84,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 			./LTOP_Oregon/rasters/01_SNIC/snic_image.vrt	(I don't think this is used in the work flow?)		
 
 
-#### 4 Raster calc clipped seed image to keep only seed pixels (QGIS)
+#### 4 Raster calc SNIC Seed Image to keep only seed pixels (QGIS)
 
 	1. Raster calculation (("seed_band">0)*"seed_band") / (("seed_band">0)*1 + ("seed_band"<=0)*0)
 
@@ -103,7 +103,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 
 
-#### 5 **Change the** ***raster calc clipped seed image*** **to a vector of points. Each point corresponds to a seed pixel. (QGIS)**
+#### 5 Change the raster calc SNIC Seed Image into a vector of points. Each point corresponds to a seed pixel. (QGIS)
 
 	1. Qgis tool - Raster pixels to points 
   	 
@@ -117,7 +117,9 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 		./LTOP_Oregon/vectors/01_SNIC/01_snic_seed_pixel_points/01_snic_seed_pixel_points.shp
 
 
-#### 6 **Sample ALL points from above image with shp file (QGIS - Sample Raster Values ~3362.35 secs)**
+#### 6 Sample SNIC Seed Image with Seed points (QGIS) 
+
+	0. Qgis tool - Sample Raster Values ~3362.35 secs) 
 
 	1. Input point layer
 
@@ -136,7 +138,9 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 		./LTOP_Oregon/vectors/01_SNIC/02_snic_seed_pixel_points_attributted/02_snic_seed_pixel_points_attributted.shp
 
 
-#### 7 **Randomly select a subset of points 75k (QGIS - Random selection within subsets)**
+#### 7 Randomly select a subset of 75k points (QGIS)
+
+	0. Qgis tool - Random selection within subsets
 
 	1. Input
 
@@ -153,7 +157,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
  		./LTOP_Oregon/vectors/01_SNIC/03_snic_seed_pixel_points_attributted_random_subset_75k/03_snic_seed_pixel_points_attributted_random_subset_75k.shp
 
 
-#### 8 **Upload sample to gee**
+#### 8 Upload sample to GEE (Moving data)
 
 	1. file location 
 
@@ -168,9 +172,6 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 	4. GEE Asset location 
 
 		users/emaprlab/03_snic_seed_pixel_points_attributted_random_subset_75k
-
-
-
 
 #### 9 Kmeans cluster from SNIC patches (GEE) 
 	
@@ -201,7 +202,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 				users/emaprlab/LTOP_Oregon_Kmeans_Cluster_Image
 
 
-#### 10 **Export KMeans seed image to Islay** 
+#### 10 Export KMeans seed image to Islay (Moving Data)
 
 	0. Open terminal on Islay in a VNC
 
@@ -227,7 +228,8 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 		./LTOP_Oregon/rasters/02_Kmeans/gee/
 
 
-#### 12 **Sample Kmeans raster** (QGIS - Sample Raster Values)
+#### 12 Sample Kmeans raster (QGIS)
+
 
 	1. Qgis (TOOL: Sample Raster Values)
 
@@ -248,7 +250,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 
 
-#### 13 **Get single point for each cluster**
+#### 13 Get single point for each Kmeans cluster (Python)
 
 	1) location
 
@@ -272,7 +274,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 		python ./LTOP_Oregon/scripts/kMeanClustering/randomDistinctSampleOfKmeansClusterIDs_v2.py
 
-#### 14 Upload SHP file of 5000 Kmeans cluster IDs points to GEE
+#### 14 Upload SHP file of 5000 Kmeans cluster IDs points to GEE (Moving Data)
 
 	1) location 
 
@@ -286,8 +288,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 		users/emaprlab/LTOP_Oregon_Kmeans_Cluster_ID_reps
 
-#### 15 **Abstract sample of Landsat Collections with 5000 Kmeans cluster reps** (GEE)
-
+#### 15 Sample Landsat Collections with 5000 Kmeans cluster point reps (GEE)
 
 	1. script local location
 
@@ -308,7 +309,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 			LTOP_Oregon_Abstract_Sample_annualSRcollection_Tranformed_NBRTCWTCGNDVIB5_v1.csv		
 
 
-#### 16 Download CSV from Google Drive
+#### 16 Download CSV from Google Drive (Moving Data)
 
 	1) Download from Google Drive
 
@@ -349,7 +350,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 
 
-#### 18 Upload rasters to GEE and make image collection
+#### 18 Upload rasters to GEE and make image collection (Moving Data)
 
 	1) Raster location
 
@@ -364,7 +365,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 	5) add each abstract image to image collection
 
 
-#### 19 Upload SHP to GEE
+#### 19 Upload SHP to GEE (Moving Data)
 
 	1) SHP file location
 
@@ -377,7 +378,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 	3) Upload to GEE 
 
 
-#### 20 Run Abstract image for each index 
+#### 20 Run Abstract image for each index (GEE)
 
 	1. script local location
 
@@ -409,7 +410,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 							LTOP_Oregon_abstractImageSample_5000pts_lt_144params_TCG_v2.csv
 							LTOP_Oregon_abstractImageSample_5000pts_lt_144params_TCW_v2.csv
  
-#### 21 Download folder containing CSV‘s one for each index 
+#### 21 Download folder containing CSV‘s one for each index (Moving Data)
 
 	1) script location 
 
@@ -426,7 +427,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 		./LTOP_Oregon/tables/LTOP_Oregon_Abstract_Image_LT_data/
 
 
-#### 22 Run LT Parameter Scoring scripts
+#### 22 Run LT Parameter Scoring scripts (Python)
 
 	1) script locaton
 
@@ -451,7 +452,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 		python ./LTOP_Oregon/scripts/lt_seletor/01_ltop_lt_parameter_scoring.py
 
-#### 23 Run LTOP Parameter Selecting Script
+#### 23 Run LTOP Parameter Selecting Script (Python)
 
 	1) script location
 
@@ -473,7 +474,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 		python ./LTOP_Oregon/scripts/lt_seletor/02_ltop_select_top_parameter_configuration.py
 
-#### 24 Upload CSV to GEE
+#### 24 Upload CSV to GEE (Moving Data)
 
 	1) CSV location 
 
@@ -482,7 +483,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 	2) Upload CSV as an asset to GEE	
 
 	
-#### 26 Generate LTOP image in GEE
+#### 26 Generate LTOP image in GEE (GEE)
 
 	1) script location
 
@@ -494,7 +495,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	4) Run Task
 	
-#### 27 Download LTOP imagery
+#### 27 Download LTOP imagery (Moving Data)
 
 	0. Open terminal on Islay in a VNC
 
