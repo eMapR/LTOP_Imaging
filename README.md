@@ -14,7 +14,11 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 #### 1 Run 01SNICPatches in GEE to generate SNIC images
 
-	1. Open script in GEE console 
+	0. Script location
+
+		./LTOP_Oregon/scripts/GEEjs/01SNICPatches.js
+
+	1. Copy and paste script in GEE console 
 	
 	2. Make sure you all needed dependances (emapr GEE account has all dependances) 
 
@@ -34,15 +38,15 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	3. This script bring data from the google drive to Islay 
 
-		/vol/v1/proj/LTOP_Oregon/scripts/GEEjs/00_get_chunks_from_gdrive.py
+		./LTOP_Oregon/scripts/GEEjs/00_get_chunks_from_gdrive.py
 
 	4. Run script 
 
-		python /vol/v1/proj/LTOP_Oregon/scripts/GEEjs/00_get_chunks_from_gdrive.py LTOP_Oregon_SNIC_v1 /vol/v1/proj/LTOP_Oregon/rasters/01_SNIC/
+		python ./LTOP_Oregon/scripts/GEEjs/00_get_chunks_from_gdrive.py LTOP_Oregon_SNIC_v1 ./LTOP_Oregon/rasters/01_SNIC/
 
 	5. Check data at download destination. 
 
-		/vol/v1/proj/LTOP_Oregon/rasters/01_SNIC/
+		./LTOP_Oregon/rasters/01_SNIC/
 
 #### 3 Merge image chunks into two vrt 
 
@@ -75,9 +79,9 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 		a) Data location:
 
-			/vol/v1/proj/LTOP_Oregon/rasters/01_SNIC/snic_seed.vrt
+			./LTOP_Oregon/rasters/01_SNIC/snic_seed.vrt
 
-			/vol/v1/proj/LTOP_Oregon/rasters/01_SNIC/snic_image.vrt	(I dont think this is used in the workflow?)		
+			./LTOP_Oregon/rasters/01_SNIC/snic_image.vrt	(I dont think this is used in the workflow?)		
 
 
 #### 4 Raster calc clipped seed image to keep only seed pixels (QGIS)
@@ -86,11 +90,11 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	2. Input:
 
-		/vol/v1/proj/LTOP_Oregon/rasters/01_SNIC/snic_seed.vrt
+		./LTOP_Oregon/rasters/01_SNIC/snic_seed.vrt
 
 	3. Output: 	
 
-		/vol/v1/proj/LTOP_Oregon/rasters/01_SNIC/snic_seed_pixels.tif
+		./LTOP_Oregon/rasters/01_SNIC/snic_seed_pixels.tif
 
 	Note: 
 		This raster calculation change the 0 pixel values to no data in Q-gis. However, this also 
@@ -106,22 +110,22 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	2. Input
 
-		/vol/v1/proj/LTOP_Oregon/rasters/01_SNIC/snic_seed_pixels.tif
+		./LTOP_Oregon/rasters/01_SNIC/snic_seed_pixels.tif
 
 	3. Output
 
-		/vol/v1/proj/LTOP_Oregon/vectors/01_SNIC/01_snic_seed_pixel_points/01_snic_seed_pixel_points.shp
+		./LTOP_Oregon/vectors/01_SNIC/01_snic_seed_pixel_points/01_snic_seed_pixel_points.shp
 
 
 #### 6 **Sample ALL points from above image with shp file (QGIS - Sample Raster Values ~3362.35 secs)**
 
 	1. Input point layer
 
-		/vol/v1/proj/LTOP_Oregon/vectors/01_SNIC/01_snic_seed_pixel_points/01_snic_seed_pixel_points.shp
+		./LTOP_Oregon/vectors/01_SNIC/01_snic_seed_pixel_points/01_snic_seed_pixel_points.shp
 
 	2. Raster layer 
 
-		/vol/v1/proj/LTOP_Oregon/rasters/01_SNIC/snic_seed.vrt
+		./LTOP_Oregon/rasters/01_SNIC/snic_seed.vrt
 
 	3. Output column prefix
 
@@ -129,14 +133,14 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	4. Output location 
 
-		/vol/v1/proj/LTOP_Oregon/vectors/01_SNIC/02_snic_seed_pixel_points_attributted/02_snic_seed_pixel_points_attributted.shp
+		./LTOP_Oregon/vectors/01_SNIC/02_snic_seed_pixel_points_attributted/02_snic_seed_pixel_points_attributted.shp
 
 
 #### 7 **Randomly select a subset of points 75k (QGIS - Random selection within subsets)**
 
 	1. Input
 
-		/vol/v1/proj/LTOP_Oregon/vectors/01_SNIC/02_snic_seed_pixel_points_attributted/02_snic_seed_pixel_points_attributted.shp
+		./LTOP_Oregon/vectors/01_SNIC/02_snic_seed_pixel_points_attributted/02_snic_seed_pixel_points_attributted.shp
 
 	2. Number of selection 
 
@@ -146,14 +150,14 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	3. Save selected features as:
 
- 		/vol/v1/proj/LTOP_Oregon/vectors/01_SNIC/03_snic_seed_pixel_points_attributted_random_subset_75k/03_snic_seed_pixel_points_attributted_random_subset_75k.shp
+ 		./LTOP_Oregon/vectors/01_SNIC/03_snic_seed_pixel_points_attributted_random_subset_75k/03_snic_seed_pixel_points_attributted_random_subset_75k.shp
 
 
 #### 8 **Upload sample to gee**
 
 	1. file location 
 
-		/vol/v1/proj/LTOP_Oregon/vectors/01_SNIC/03_snic_seed_pixel_points_attributted_random_subset_75k/ 
+		./LTOP_Oregon/vectors/01_SNIC/03_snic_seed_pixel_points_attributted_random_subset_75k/ 
 
 	2. Zip shape files in directory
 
@@ -172,7 +176,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 	
 	1. script local location
 
-		/vol/v1/proj/LTOP_Oregon/scripts/GEEjs/02kMeansCluster.js 
+		./LTOP_Oregon/scripts/GEEjs/02kMeansCluster.js 
 
 	2. copy and paste script into GEE console 
 	
@@ -202,7 +206,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	1. Script location 
 
-		/vol/v1/proj/LTOP_Oregon/scripts/GEEjs/
+		./LTOP_Oregon/scripts/GEEjs/
 
 	2. Activate conda environment “py35”
 
@@ -214,11 +218,11 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	4. Python Command
 
-		python /vol/v1/proj/LTOP_Oregon/scripts/GEEjs/00_get_chunks_from_gdrive.py LTOP_Oregon_Kmeans_v1 /vol/v1/proj/LTOP_Oregon/rasters/02_Kmeans/gee/
+		python ./LTOP_Oregon/scripts/GEEjs/00_get_chunks_from_gdrive.py LTOP_Oregon_Kmeans_v1 ./LTOP_Oregon/rasters/02_Kmeans/gee/
 
 	3. output location
 
-		/vol/v1/proj/LTOP_Oregon/rasters/02_Kmeans/gee/
+		./LTOP_Oregon/rasters/02_Kmeans/gee/
 
 
 #### 12 **Sample Kmeans raster** (QGIS - Sample Raster Values)
@@ -227,9 +231,9 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 		a)Input 
 
-			/vol/v1/proj/LTOP_Oregon/rasters/02_Kmeans/LTOP_Oregon_Kmeans_seed_image.tif
+			./LTOP_Oregon/rasters/02_Kmeans/LTOP_Oregon_Kmeans_seed_image.tif
 
-			/vol/v1/proj/LTOP_Oregon/vectors/01_SNIC/01_snic_seed_pixel_points/01_snic_seed_pixel_points.shp
+			./LTOP_Oregon/vectors/01_SNIC/01_snic_seed_pixel_points/01_snic_seed_pixel_points.shp
 
 		b) Output column prefix
 
@@ -237,7 +241,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 		c) output
 
-			/vol/v1/proj/LTOP_Oregon/vectors/02_Kmeans/LTOP_Oregon_Kmeans_Cluster_IDs.shp
+			./LTOP_Oregon/vectors/02_Kmeans/LTOP_Oregon_Kmeans_Cluster_IDs.shp
 
 
 
@@ -246,17 +250,17 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	1) location
 
-		/vol/v1/proj/LTOP_Oregon/scripts/kMeanClustering/randomDistinctSampleOfKmeansClusterIDs_v2.py
+		./LTOP_Oregon/scripts/kMeanClustering/randomDistinctSampleOfKmeansClusterIDs_v2.py
 
 	2) Edit in script parameters  
 
 		a) input shp file:
 
-			/vol/v1/proj/LTOP_Oregon/vectors/02_Kmeans/LTOP_Oregon_Kmeans_Cluster_IDs/LTOP_Oregon_Kmeans_Cluster_IDs.shp
+			./LTOP_Oregon/vectors/02_Kmeans/LTOP_Oregon_Kmeans_Cluster_IDs/LTOP_Oregon_Kmeans_Cluster_IDs.shp
 
 		b) output shp file:
 
-			/vol/v1/proj/LTOP_Oregon/vectors/02_Kmeans/LTOP_Oregon_Kmeans_Cluster_ID_reps/LTOP_Oregon_Kmeans_Cluster_IDs.shp
+			./LTOP_Oregon/vectors/02_Kmeans/LTOP_Oregon_Kmeans_Cluster_ID_reps/LTOP_Oregon_Kmeans_Cluster_IDs.shp
 
 	3) conda 
 
@@ -264,13 +268,13 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	4) run script
 
-		python /vol/v1/proj/LTOP_Oregon/scripts/kMeanClustering/randomDistinctSampleOfKmeansClusterIDs_v2.py
+		python ./LTOP_Oregon/scripts/kMeanClustering/randomDistinctSampleOfKmeansClusterIDs_v2.py
 
 #### 14 Upload SHP file of 5000 Kmeans cluster IDs points to GEE
 
 	1) location 
 
-		/vol/v1/proj/LTOP_Oregon/vectors/02_Kmeans/
+		./LTOP_Oregon/vectors/02_Kmeans/
 	
 	2) zip folder 
 
@@ -298,24 +302,24 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	2) location (islay)
 
-		/vol/v1/proj/LTOP_Oregon/tables/abstract_sample_gee
+		./LTOP_Oregon/tables/abstract_sample_gee
 
 
 #### 17 Create Abstract image with CSV (python) 
 
 	1) Input
 
-		/vol/v1/proj/LTOP_Oregon/tables/abstract_sample_gee/LTOP_Oregon_Abstract_Sample_annualSRcollection_Tranformed_NBRTCWTCGNDVIB5_v1.csv
+		./LTOP_Oregon/tables/abstract_sample_gee/LTOP_Oregon_Abstract_Sample_annualSRcollection_Tranformed_NBRTCWTCGNDVIB5_v1.csv
 
 	2) Outputs
 
 		a) image directory
 
-			/vol/v1/proj/LTOP_Oregon/rasters/03_AbstractImage/
+			./LTOP_Oregon/rasters/03_AbstractImage/
 
 		b) SHP directory
 
-			/vol/v1/proj/LTOP_Oregon/vectors/03_abstract_image_pixel_points/
+			./LTOP_Oregon/vectors/03_abstract_image_pixel_points/
 
 	3) Conda 
 
@@ -331,7 +335,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	1) From location
 
-		/vol/v1/proj/LTOP_Oregon/rasters/03_AbstractImage
+		./LTOP_Oregon/rasters/03_AbstractImage
 
 	2) make folder in GEE asseset to hold all the images 
 
@@ -348,7 +352,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	1) From location
 
-		/vol/v1/proj/LTOP_Oregon/vectors
+		./LTOP_Oregon/vectors
 
 	2) zip files
 
@@ -361,7 +365,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	1) Edit/Review 
 
-		/vol/v1/proj/LTOP_Oregon/scripts/GEEjs/04abstractImager.js
+		./LTOP_Oregon/scripts/GEEjs/04abstractImager.js
 
 	2) copy and paste in GEE console
 
@@ -379,71 +383,71 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	1) script location 
 
-		/vol/v1/proj/LTOP_Oregon/scripts/GEEjs/
+		./LTOP_Oregon/scripts/GEEjs/
 
 	2) Run Command 
 
 		conda activate py35
 
-		python 00_get_chunks_from_gdrive.py LTOP_Oregon_abstractImageSamples_5000pts_v2 /vol/v1/proj/LTOP_Oregon/tables/LTOP_Oregon_Abstract_Image_LT_data/
+		python 00_get_chunks_from_gdrive.py LTOP_Oregon_abstractImageSamples_5000pts_v2 ./LTOP_Oregon/tables/LTOP_Oregon_Abstract_Image_LT_data/
 
 	3) output location 
 
-		/vol/v1/proj/LTOP_Oregon/tables/LTOP_Oregon_Abstract_Image_LT_data/
+		./LTOP_Oregon/tables/LTOP_Oregon_Abstract_Image_LT_data/
 
 
 #### 22 Run LT Parameter Scoring scripts
 
 	1) script locaton
 
-		/vol/v1/proj/LTOP_Oregon/scripts/lt_seletor/01_ltop_lt_parameter_scoring.py
+		./LTOP_Oregon/scripts/lt_seletor/01_ltop_lt_parameter_scoring.py
 
 	2) Edit line 119 as the input directory of csv files
 
 		a) input directory 
 
-			/vol/v1/proj/LTOP_Oregon/tables/LTOP_Oregon_Abstract_Image_LT_data/
+			./LTOP_Oregon/tables/LTOP_Oregon_Abstract_Image_LT_data/
 
 
 	3) Edit line 653 as the output csv file
 
 		a) output line 563
 
-			/vol/v1/proj/LTOP_Oregon/tables/LTOP_Oregon_selected_config/LTOP_Oregon_selected_config.csv
+			./LTOP_Oregon/tables/LTOP_Oregon_selected_config/LTOP_Oregon_selected_config.csv
 
 	4) run script
 
 		conda activate geo_env
 
-		python /vol/v1/proj/LTOP_Oregon/scripts/lt_seletor/01_ltop_lt_parameter_scoring.py
+		python ./LTOP_Oregon/scripts/lt_seletor/01_ltop_lt_parameter_scoring.py
 
 #### 23 Run LTOP Parameter Selecting Script
 
 	1) script location
 
-		/vol/v1/proj/LTOP_Oregon/scripts/lt_seletor/02_ltop_select_top_parameter_configuration.py
+		./LTOP_Oregon/scripts/lt_seletor/02_ltop_select_top_parameter_configuration.py
 
 	2) Edit and review script
 
 		input file path line 6
 
-			/vol/v1/proj/LTOP_Oregon/tables/LTOP_Oregon_config_scores/LTOP_Oregon_config_scores.csv
+			./LTOP_Oregon/tables/LTOP_Oregon_config_scores/LTOP_Oregon_config_scores.csv
 
 		output file path line 7
 
-			/vol/v1/proj/LTOP_Oregon/tables/LTOP_Oregon_selected_configurations/LTOP_Oregon_config_selected.csv
+			./LTOP_Oregon/tables/LTOP_Oregon_selected_configurations/LTOP_Oregon_config_selected.csv
 
 	3) run script
 
 		conda base
 
-		python /vol/v1/proj/LTOP_Oregon/scripts/lt_seletor/02_ltop_select_top_parameter_configuration.py
+		python ./LTOP_Oregon/scripts/lt_seletor/02_ltop_select_top_parameter_configuration.py
 
 #### 24 Upload CSV to GEE
 
 	1) CSV location 
 
-		/vol/v1/proj/LTOP_Oregon/tables/LTOP_Oregon_selected_configurations/LTOP_Oregon_config_selected.csv
+		./LTOP_Oregon/tables/LTOP_Oregon_selected_configurations/LTOP_Oregon_config_selected.csv
 
 	2) Upload CSV as an asset to GEE	
 
@@ -452,7 +456,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	1) script location
 
-		/vol/v1/proj/LTOP_Oregon/scripts/GEEjs/05lt-Optumum-Imager.js
+		./LTOP_Oregon/scripts/GEEjs/05lt-Optumum-Imager.js
 
 	2) Edit and review script
 
@@ -467,7 +471,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	1. Script location 
 
-		/vol/v1/proj/LTOP_Oregon/scripts/GEEjs/
+		./LTOP_Oregon/scripts/GEEjs/
 
 	2. Activate conda environment “py35”
 
@@ -479,8 +483,8 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	4. Run script 
 
-		python /vol/v1/proj/LTOP_Oregon/scripts/GEEjs/00_get_chunks_from_gdrive.py
+		python ./LTOP_Oregon/scripts/GEEjs/00_get_chunks_from_gdrive.py
 
 	5. Check data at download destination. 
 
-		/vol/v1/proj/LTOP_Oregon/rasters/01_SNIC/
+		./LTOP_Oregon/rasters/01_SNIC/
