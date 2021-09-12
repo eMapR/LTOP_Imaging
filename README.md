@@ -483,7 +483,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 	2) Upload CSV as an asset to GEE	
 
 	
-#### 26 Generate LTOP image in GEE (GEE)
+#### 26 Generate LTOP image in GEE (GEE) !!!oregon took 3 days time!!!
 
 	1) script location
 
@@ -495,6 +495,10 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	4) Run Task
 	
+		asset task
+
+		to drive task
+
 #### 27 Download LTOP imagery (Moving Data)
 
 	0. Open terminal on Islay in a VNC
@@ -514,8 +518,8 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 	4. Run script 
 
-		python ./LTOP_Oregon/scripts/GEEjs/00_get_chunks_from_gdrive.py
-
+		python 00_get_chunks_from_gdrive.py LTOP_Oregon_image_withVertYrs_NBR /LTOP_Oregon/rasters/04_LTOP_Image_NBR/
+		
 	5. Check data at download destination. 
 
 		./LTOP_Oregon/rasters/01_SNIC/
