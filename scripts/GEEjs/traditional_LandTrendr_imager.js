@@ -47,7 +47,16 @@ var transformCol = ltgee.transformSRcollection(annualSRcollection, ftvList);
 var lt = ltgee.runLT(startYear, endYear, startDay, endDay, aoi, index, ftvList, runParams, maskThese, exclude)
 
 var getFittedData = ltgee.getFittedData(lt, startYear, endYear, index, ftvList)
+//Map.addLayer(getFittedData)
 
+
+var years = [];                                                           // make an empty array to hold year band names
+for (var i = startYear; i <= endYear; ++i) years.push("ftv_"+i.toString()); // fill the array with years from the startYear to the endYear and convert them to string
+
+
+
+var outdata = getFittedData.select(getFittedData.bandNames(),years)
+//Map.addLayer(outdata)
 
 Export.image.toDrive({
   image:getFittedData,
@@ -82,7 +91,7 @@ Export.table.toDrive({
 });
 
 Export.image.toAsset({
-  image: getFittedData,
+  image: outdata,
   description: 'LTOP_LandTrendr_ltOrig_Oregon_NBR',
   assetId: 'LTOP_LandTrendr_ltOrig_Oregon_NBR',
   region: aoi,
