@@ -523,3 +523,11 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 	5. Check data at download destination. 
 
 		./LTOP_Oregon/rasters/01_SNIC/
+
+## Valdation
+
+In order to assess the performance of the Oregon LandTrendr Optimization we need to compare it to the triditional 
+LandTrendr data-set. The validation well be carried out by using the LTOP (LandTrendr Optimizaton) dataset as the 
+referance data to the classification of a NLCD dataset. This classification meathod will also be conducted with the 
+traditional LandTrendr dataset. Then the two classified images will be compared to the source 
+NLCD to see which, if any, have better performance.   
