@@ -526,10 +526,3 @@ NOTE: The below work flow is of a Oregon test region. So file paths to data sets
 
 		./LTOP_Oregon/rasters/01_SNIC/
 
-## Validation
-
-In order to assess the performance of the Oregon LandTrendr Optimization we need to compare it to the traditional 
-LandTrendr data-set. The validation well be carried out by using the LTOP (LandTrendr Optimization) data set as the
-reference data to the classification of a NLCD data set. This classification method will also be conducted with the 
-traditional LandTrendr data set. Then the two classified images will be compared to the source 
-NLCD to see which, if any, have better performance.   
