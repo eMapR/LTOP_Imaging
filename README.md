@@ -2,7 +2,7 @@
 
 LandTrendr is a set of spectral-temporal segmentation algorithms that focuses on removing the natural spectral variations in a time series of Landsat Images. Stabling the natural variation in a time series, gives emphasis on how a landscape is evolving with time. This is useful in many pursuits as it gives information on the state of a landscape, be it growing, remaining stable, or on a decline. LandTrendr is mostly used in Google Earth Engine (GEE), an online image processing console, where it is readily available for use.  
 
-A large obstacle in using LandTrendr in GEE, is knowing which configuration of LandTrendr parameters to use. The LandTrendr GEE function uses 9 arguments: 8 parameters that control how spectral-temporal segmentation is executed, and an annual image collection on which to assess and remove the natural variations. The original LandTrendr journal illustrates the effect and sensitivity of changing some of these values. The default parameters for the LandTrendr GEE algorithm do a satisfactory job in many circumstances, but extensive testing and time is needed to hone the parameter selection to get the best segmentation out of the LandTrendr algorithm for a given region. Thus, augmenting the Landtrendr parameter selection process would save time and standardize a method to choose parameters, but we also aim to take this augmentation a step further. 
+A large obstacle in using LandTrendr in GEE, is knowing which configuration of LandTrendr parameters to use. The LandTrendr GEE function uses 9 arguments: 8 parameters that control how spectral-temporal segmentation is executed, and an annual image collection on which to assess and remove the natural variations. The original LandTrendr journal illustrates the effect and sensitivity of changing some of these values. The default parameters for the LandTrendr GEE algorithm do a satisfactory job in many circumstances, but extensive testing and time is needed to hone the parameter selection to get the best segmentation out of the LandTrendr algorithm for a given region. Thus, augmenting the LandTrendr parameter selection process would save time and standardize a method to choose parameters, but we also aim to take this augmentation a step further. 
 
 Traditionally, LandTrendr is run over an image collection with a single LandTrendr parameter configuration and is able to remove natural variation for every pixel time series in an image. But no individual LandTrendr parameter configuration is best for all surface conditions, where forest may respond well to one configuration, but many under or over emphasize stabilization in another land class. Thus here we aim to delineate patches of spectrally similar pixels from the imagery, find what LandTrendr parameters work best for each patch group, and run LandTrendr on each patch group location with that best parameter configuration. 
 
@@ -11,6 +11,8 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 [GEE link](https://code.earthengine.google.com/https://code.earthengine.google.com/?accept_repo=users/emaprlab/SERVIR) open with Emapr Account for dependencies 
 
 ![img](https://lh4.googleusercontent.com/qpYv4_Q9InR0_LBzk1vdtIWhfLmMRNwZ840DSv6h0CzETzPjd2n6pgQP24eiHFQLfTKp3Tr17yLoqwdRfPeNb_YyktC60kTGnQulL7UwiLoQit-OyJJ3H_vI25-GE06J20ab_YeO=s0)
+
+NOTE: The below work flow is of a Oregon test region. So file paths are symbolic.  
 
 #### 1 Run 01SNICPatches in GEE to generate SNIC images (GEE)
 
@@ -483,7 +485,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 	2) Upload CSV as an asset to GEE	
 
 	
-#### 26 Generate LTOP image in GEE (GEE) !!!oregon took 3 days time!!!
+#### 26 Generate LTOP image in GEE (GEE) !!!Oregon took 3 days time!!!
 
 	1) script location
 
@@ -524,10 +526,10 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 		./LTOP_Oregon/rasters/01_SNIC/
 
-## Valdation
+## Validation
 
-In order to assess the performance of the Oregon LandTrendr Optimization we need to compare it to the triditional 
-LandTrendr data-set. The validation well be carried out by using the LTOP (LandTrendr Optimizaton) dataset as the 
-referance data to the classification of a NLCD dataset. This classification meathod will also be conducted with the 
-traditional LandTrendr dataset. Then the two classified images will be compared to the source 
+In order to assess the performance of the Oregon LandTrendr Optimization we need to compare it to the traditional 
+LandTrendr data-set. The validation well be carried out by using the LTOP (LandTrendr Optimization) data set as the
+reference data to the classification of a NLCD data set. This classification method will also be conducted with the 
+traditional LandTrendr data set. Then the two classified images will be compared to the source 
 NLCD to see which, if any, have better performance.   
