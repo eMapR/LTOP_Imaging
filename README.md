@@ -12,7 +12,7 @@ Traditionally, LandTrendr is run over an image collection with a single LandTren
 
 ![img](https://lh4.googleusercontent.com/qpYv4_Q9InR0_LBzk1vdtIWhfLmMRNwZ840DSv6h0CzETzPjd2n6pgQP24eiHFQLfTKp3Tr17yLoqwdRfPeNb_YyktC60kTGnQulL7UwiLoQit-OyJJ3H_vI25-GE06J20ab_YeO=s0)
 
-NOTE: The below work flow is of a Oregon test region. So file paths are symbolic.  
+NOTE: The below work flow is of a Oregon test region. So file paths to data sets are symbolic. To Islay they are real from `vol/v1/proj`.  
 
 #### 1 Run 01SNICPatches in GEE to generate SNIC images (GEE)
 
