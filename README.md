@@ -16,6 +16,8 @@ NOTE: The below work flow is of a Oregon test region. So file paths to data sets
 
 #### 1 Run 01SNICPatches in GEE to generate SNIC images (GEE)
 
+First, we want to break up an image into spectrally simular chucks, patches of pixels that are like one another. These could be pixels that make up a pond or a stand of forest. This is what the SNIC script does for us. One thing to note is that ever patch is independent of the other patches even if two patches represent the same land class. From this script we get a seed image, which represents the starting point of each patch. The Seed Image has several bands pretaining to mean spectral values of that Seed's patch.   
+
 	0. Script location
 
 		./LTOP_Oregon/scripts/GEEjs/01SNICPatches.js
@@ -31,6 +33,8 @@ NOTE: The below work flow is of a Oregon test region. So file paths to data sets
 	5. Run tasks
 
 #### 2 Getting SNIC data from the Google drive to Islay (Moving Data)
+
+Here, we move our SNIC datasets to a server for further processing .
 
 	1. Open terminal on Islay in a VNC
 
@@ -51,6 +55,10 @@ NOTE: The below work flow is of a Oregon test region. So file paths to data sets
 		./LTOP_Oregon/rasters/01_SNIC/
 
 #### 3 Merge image chunks into two virtual raster (GDAL)
+
+Out first processing step is to make a virual raster from the many Seed Image chuncks download. 
+
+[add seed image]
 
 	1. Activate conda environment
 
@@ -88,6 +96,10 @@ NOTE: The below work flow is of a Oregon test region. So file paths to data sets
 
 #### 4 Raster calc SNIC Seed Image to keep only seed pixels (QGIS)
 
+Now we set a No Data to 0 making most of the image No Data which is usful in the next step 
+
+[add no data seed image]
+
 	1. Raster calculation (("seed_band">0)*"seed_band") / (("seed_band">0)*1 + ("seed_band"<=0)*0)
 
 	2. Input:
@@ -107,6 +119,8 @@ NOTE: The below work flow is of a Oregon test region. So file paths to data sets
 
 #### 5 Change the raster calc SNIC Seed Image into a vector of points. Each point corresponds to a seed pixel. (QGIS)
 
+Here we change every pixel in the Seed Image to a point vector except pixels with no data values.
+
 	1. Qgis tool - Raster pixels to points 
   	 
 
@@ -120,6 +134,8 @@ NOTE: The below work flow is of a Oregon test region. So file paths to data sets
 
 
 #### 6 Sample SNIC Seed Image with Seed points (QGIS) 
+
+With point generated in the pervious step we extract the pixel values from the Seed Image across all bands and save them to a attribute table of the point vector file.
 
 	0. Qgis tool - Sample Raster Values ~3362.35 secs) 
 
@@ -142,6 +158,8 @@ NOTE: The below work flow is of a Oregon test region. So file paths to data sets
 
 #### 7 Randomly select a subset of 75k points (QGIS)
 
+After sampling we select a subset of points. The size of the subset is arbitraray choosen to a size what works in GEE.
+
 	0. Qgis tool - Random selection within subsets
 
 	1. Input
@@ -161,6 +179,8 @@ NOTE: The below work flow is of a Oregon test region. So file paths to data sets
 
 #### 8 Upload sample to GEE (Moving data)
 
+Here we zip and upload the subset of vector points to GEE.
+
 	1. file location 
 
 		./LTOP_Oregon/vectors/01_SNIC/03_snic_seed_pixel_points_attributted_random_subset_75k/ 
@@ -176,6 +196,8 @@ NOTE: The below work flow is of a Oregon test region. So file paths to data sets
 		users/emaprlab/03_snic_seed_pixel_points_attributted_random_subset_75k
 
 #### 9 Kmeans cluster from SNIC patches (GEE) 
+
+Remember in step 1 when I said the SNIC patch are independent of one another even if they represent the same land class. Well, it is here, where we link the patches that are simular to one another with the Kmeans alogroithm.  
 	
 	1. script local location
 
@@ -187,13 +209,15 @@ NOTE: The below work flow is of a Oregon test region. So file paths to data sets
 
 	3. Review in script parameters.
 
+		number of Kmean Clusters : 5000
+
 	4. Run script
 
 	5. Run tasks
 
 		task to drive 
 
-			seed image to Google drive
+			Kmeans Cluster seed image to Google drive
 
 				./LTOP_Oregon/rasters/02_Kmeans/LTOP_Oregon_Kmeans_seed_image.tif
 
@@ -205,6 +229,8 @@ NOTE: The below work flow is of a Oregon test region. So file paths to data sets
 
 
 #### 10 Export KMeans seed image to Islay (Moving Data)
+
+Download the Kmeans Seed image. This image looks like the SNIC Seed Image but the pixels values are Kmeans Cluster IDs. This IDs are the links between simular patches. 
 
 	0. Open terminal on Islay in a VNC
 
@@ -232,6 +258,7 @@ NOTE: The below work flow is of a Oregon test region. So file paths to data sets
 
 #### 12 Sample Kmeans raster (QGIS)
 
+Using the SNIC Seed point vector dataset, the output from step 5, we sample the Kmeans Seed Image.
 
 	1. Qgis (TOOL: Sample Raster Values)
 
@@ -253,6 +280,8 @@ NOTE: The below work flow is of a Oregon test region. So file paths to data sets
 
 
 #### 13 Get single point for each Kmeans cluster (Python)
+
+Since our sample contains points for every pixel in the Seed Image there are duplicate Kmeans Cluster ID values. These duplicates represent Kmeans Clusters that are spectrally simular, linked land class if you will. But we only need vector point with a unique Cluster ID. So here we randomly select points each of which has a unique Kmeans Cluster ID. So we end up with 5000 points for 5000 Kmeans Cluster IDs.  
 
 	1) location
 
@@ -278,6 +307,8 @@ NOTE: The below work flow is of a Oregon test region. So file paths to data sets
 
 #### 14 Upload SHP file of 5000 Kmeans cluster IDs points to GEE (Moving Data)
 
+Move the random subset of the Kmeans sample points up to GEE.
+
 	1) location 
 
 		./LTOP_Oregon/vectors/02_Kmeans/LTOP_Oregon_Kmeans_Cluster_ID_reps/
@@ -291,6 +322,8 @@ NOTE: The below work flow is of a Oregon test region. So file paths to data sets
 		users/emaprlab/LTOP_Oregon_Kmeans_Cluster_ID_reps
 
 #### 15 Sample Landsat Collections with 5000 Kmeans cluster point reps (GEE)
+
+
 
 	1. script local location
 
