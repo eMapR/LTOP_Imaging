@@ -321,8 +321,11 @@ Move the random subset of the Kmeans sample points up to GEE.
 
 		users/emaprlab/LTOP_Oregon_Kmeans_Cluster_ID_reps
 
-#### 15 Sample Landsat Collections with 5000 Kmeans cluster point reps (GEE)
+#### 15 Sample Landsat Image Collections with the 5000 Kmeans Cluster Points (GEE)
 
+With the subset sample of Kmeans Cluster points, a point for each cluster ID, sample a time series of Landsat Imagery (TCB TCG TCW NBR and NDVI). This sample is exported as a table from GEE.
+
+[Image of Table]  
 
 
 	1. script local location
@@ -346,6 +349,8 @@ Move the random subset of the Kmeans sample points up to GEE.
 
 #### 16 Download CSV from Google Drive (Moving Data)
 
+Download the table 
+
 	1) Download from Google Drive
 
 		LTOP_Oregon_Abstract_Sample_annualSRcollection_Tranformed_NBRTCWTCGNDVIB5_v1.csv
@@ -356,6 +361,12 @@ Move the random subset of the Kmeans sample points up to GEE.
 
 
 #### 17 Create Abstract image with CSV (python) 
+
+Here we create an abstract image. We start with the table that contains a time series of spretral values for 5000 points. These points locations are moved to be adjsent to one aonther, and are turned into pixels with each observation in the time series a new image of pixels. This script exports a TIFF image for every year in the time series and a new point vector file at each pixel locaton. 
+
+[image of orignal points]
+[image of move points]
+[image of abstract image] 
 
 	1) Script Location 
 
@@ -387,6 +398,8 @@ Move the random subset of the Kmeans sample points up to GEE.
 
 #### 18 Upload rasters to GEE and make image collection (Moving Data)
 
+We then upload the abstarct images to GEE
+
 	1) Raster location
 
 		./LTOP_Oregon/rasters/03_AbstractImage/
@@ -402,6 +415,8 @@ Move the random subset of the Kmeans sample points up to GEE.
 
 #### 19 Upload SHP to GEE (Moving Data)
 
+Upload the shp file that acompanied the abstract image.
+
 	1) SHP file location
 
 		./LTOP_Oregon/vectors
@@ -414,6 +429,8 @@ Move the random subset of the Kmeans sample points up to GEE.
 
 
 #### 20 Run Abstract image for each index (GEE)
+
+
 
 	1. script local location
 
