@@ -1,4 +1,5 @@
 #imports 
+import pandas as pd	
 
 
 # This script is designed to create a list of landTrendr parameters varations. The parameter varations 
@@ -31,23 +32,30 @@ for seg in Segments:
 
 # make empty list. this will parameters appended to it
 parameterDicList = []
-
+counter = 1
+counter_list = []
 
 # iterator 
 for subList in list:
 
 
 # asign each parameter to template 
-    ltParamTemplate = "{timeSeries: ee.ImageCollection([]), maxSegments: "+str(subList[0])+" , spikeThreshold: "+str(subList[1])+", vertexCountOvershoot: 3, preventOneYearRecovery: true, recoveryThreshold: "+str(subList[2])+", pvalThreshold: "+str(subList[3])+", bestModelProportion: 0.25, minObservationsNeeded: "+str(subList[0])+" }"
+    ltParamTemplate = "{timeSeries: ee.ImageCollection([]), maxSegments: "+str(subList[0])+" , spikeThreshold: "+str(subList[1])+", vertexCountOvershoot: 3, preventOneYearRecovery: true, recoveryThreshold: "+str(subList[2])+", pvalThreshold: "+str(subList[3])+", bestModelProportion: 0.75, minObservationsNeeded: "+str(subList[0])+" }"
 
 # append completed parameters dicionary to emtpy list 
     parameterDicList.append(ltParamTemplate)
+    counter_list.append(counter)
+    counter += 1
 
 # end iterator 
 print(parameterDicList)
 
+df = pd.DataFrame(zip(counter_list, parameterDicList),columns =['Param_num', 'Parameter'])
+
+df.to_csv("./param_varation.csv", index=False)
+
 # add list to text file
-with open("./LT_parameter_varations_list_dic_144.txt", "w") as output:
-    output.write(str(parameterDicList))
+#with open("./LT_parameter_varations_list_dic_144.txt", "w") as output:
+#    output.write(str(parameterDicList))
 
 #export file
