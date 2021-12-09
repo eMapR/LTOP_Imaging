@@ -13,6 +13,11 @@
 // website: https://github.com/eMapR/LT-GEE
 
 
+//  This program takes a raster stack of images and constellates pixels that are spectrally similar around a 
+//  seed pixel. The rasters used are harmized landsat images for a given date window in a year over a yearly 
+//  time series.   
+//
+
 //////////////////////////////////////////////////////////
 //////////////////Import Modules ////////////////////////////
 ////////////////////////// /////////////////////////////
@@ -20,10 +25,10 @@
 var ltgee = require('users/emaprlab/public:LT-data-download/LandTrendr_V2.4.js'); 
 
 //////////////////////////////////////////////////////////
-/////////////////////Cambodia vector////////////////////////////
+///////////////////// vector////////////////////////////
 ////////////////////////// /////////////////////////////
 
-var table = ee.FeatureCollection("TIGER/2018/States").filterMetadata("NAME","equals","Oregon");
+var table = ee.FeatureCollection("users/emaprlab/SERVIR/v1/Cambodia");
 
 //Centers the map on spatial features 
 var aoi = table.geometry().buffer(5000);
@@ -31,55 +36,25 @@ Map.centerObject(aoi)
 Map.addLayer(aoi)
 
 //////////////////////////////////////////////////////////
-////////////////////params//////////////////////////
+//////////////////// time and mask params//////////////////////////
 ////////////////////////// /////////////////////////////
 
 var startYear = 1999; 
 var endYear = 2020; 
-var startDate = '06-20'; 
-var endDate =   '09-10'; 
-var masked = ['cloud', 'shadow', 'snow'] // Image masking options ie cloud option tries to remove clouds from the imagery. powermask in new and has magic powers ... RETURN TO THIS AND ADD MORE DETAIL
-var folder = "LTOP_Oregon_SNIC_v1" 
-var description = "LTOP_Oregon_SNIC_v1"
+var startDate = '11-20'; 
+var endDate =   '03-10'; 
+var masked = ['cloud', 'shadow'] // Image masking options ie cloud option tries to remove clouds from the imagery. powermask in new and has magic powers ... RETURN TO THIS AND ADD MORE DETAIL
 
 /////////////////////////////////////////////////////////
 ////////////////////////Landsat Composites///////////////////////////////
 /////////////////////////////////////////////////////////
 
-var dummyCollection = ee.ImageCollection([ee.Image([0,0,0,0,0,0]).mask(ee.Image(0))]);
 
-var getCombinedSRcollection20 = ltgee.getCombinedSRcollection(2020, startDate, endDate, aoi, masked);
-var getCombinedSRcollection10 = ltgee.getCombinedSRcollection(2010, startDate, endDate, aoi, masked);
-var getCombinedSRcollection00 = ltgee.getCombinedSRcollection(2000, startDate, endDate, aoi, masked);
+var image2020 = ltgee.buildSRcollection(2020, 2020, startDate, endDate, aoi, masked).mosaic()
+var image2010 = ltgee.buildSRcollection(2010, 2010, startDate, endDate, aoi, masked).mosaic()
+var image2000 = ltgee.buildSRcollection(2000, 2000, startDate, endDate, aoi, masked).mosaic()
 
-//add auxmask step
-
-
-// make a medoid composite with equal weight among indices
-var medoidMosaic = function(inCollection, dummyCollection) {
-  
-  // fill in missing years with the dummy collection
-  var imageCount = inCollection.toList(1).length();                                                            // get the number of images 
-  var finalCollection = ee.ImageCollection(ee.Algorithms.If(imageCount.gt(0), inCollection, dummyCollection)); // if the number of images in this year is 0, then use the dummy collection, otherwise use the SR collection
-  
-  // calculate median across images in collection per band
-  var median = finalCollection.median();                                                                       // calculate the median of the annual image collection - returns a single 6 band image - the collection median per band
-  
-  // calculate the different between the median and the observation per image per band
-  var difFromMedian = finalCollection.map(function(img) {
-    var diff = ee.Image(img).subtract(median).pow(ee.Image.constant(2));                                       // get the difference between each image/band and the corresponding band median and take to power of 2 to make negatives positive and make greater differences weight more
-    return diff.reduce('sum').addBands(img);                                                                   // per image in collection, sum the powered difference across the bands - set this as the first band add the SR bands to it - now a 7 band image collection
-  });
-  
-  // get the medoid by selecting the image pixel with the smallest difference between median and observation per band 
-  return ee.ImageCollection(difFromMedian).reduce(ee.Reducer.min(7)).select([1,2,3,4,5,6], ['B1','B2','B3','B4','B5','B7']); // find the powered difference that is the least - what image object is the closest to the median of teh collection - and then subset the SR bands and name them - leave behind the powered difference band
-};
-
-var medaic20 = medoidMosaic(getCombinedSRcollection20, dummyCollection)
-var medaic10 = medoidMosaic(getCombinedSRcollection10, dummyCollection)
-var medaic00 = medoidMosaic(getCombinedSRcollection00, dummyCollection)
-
-var LandsatComposites = medaic20.addBands(medaic10).addBands(medaic00)
+var LandsatComposites = image2020.addBands(image2010).addBands(image2000)
 
 //////////////////////////////////////////////////////////
 ////////////////////SNIC/////////////////////////////
@@ -91,7 +66,7 @@ var snicImagey = ee.Algorithms.Image.Segmentation.SNIC({
   compactness: 1, //degrees of irregularity of the patches from a square 
   }).clip(aoi);
   
-Map.addLayer(snicImagey,{"opacity":1,"bands":["B3_mean","B2_mean","B1_mean"],"min":242.47874114990233,"max":962.1856112670898,"gamma":1},'snicImagey')
+Map.addLayer(snicImagey,{"opacity":1,"bands":["B3_mean","B2_mean","B1_mean"],"min":242.47874114990233,"max":962.1856112670898,"gamma":1},'snicImagey1')
 
 //////////////////////////////////////////////////////////
 //////////////SNIC split by bands////////////////////////
@@ -115,9 +90,9 @@ Map.addLayer(SNIC_means_image,{"opacity":1,"bands":["B3_mean","B2_mean","B1_mean
 
 Export.image.toDrive({
         image:snicImagey.toInt32().clip(aoi), 
-        description: description, 
-        folder:folder, 
-        fileNamePrefix: "snic_image_", 
+        description: 'CambodiaSNIC_v1', 
+        folder:'CambodiaSNIC_v1', 
+        fileNamePrefix: "CambodiaSNIC_v1", 
         region:aoi, 
         scale:30, 
         maxPixels: 1e13 
@@ -125,14 +100,13 @@ Export.image.toDrive({
       
 Export.image.toDrive({
         image:SNIC_means_image.toInt32().clip(aoi), 
-        description: description, 
-        folder:folder, 
-        fileNamePrefix: "snic_seed_", 
+        description: 'CambodiaSNICseed_v1', 
+        folder:'CambodiaSNIC_v1', 
+        fileNamePrefix: "CambodiaSNICseed_v1", 
         region:aoi, 
         scale:30, 
         maxPixels: 1e13 
       })   
-
 
 
 
