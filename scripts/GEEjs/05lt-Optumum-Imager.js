@@ -10,6 +10,14 @@
 //         Robert Kennedy | rkennedy@coas.oregonstate.edu
 // website: https://github.com/eMapR/LT-GEE
 
+//  This program takes three inputs: a cluster image, look up table and boundary aoi. The cluster image is 
+//  used to select spatial regions on which to execute a specially selected LandTrendr parameter 
+//  configuration. The look up table contains the cluster id , index and  LandTrendr parameter configuration
+//  on which to operate. The boundary aoi is used to clip to the output raster stack. The general flow of 
+//  the program consists of three main parts: The filtering of the lookup table by index, Applying special 
+//  selected parameters to LandTrendr with spatial conditions, and the merger of various unique LandTrendr 
+//  datasets. 
+
 //////////////////////////////////////////////////////////
 //////////////////Import Modules ////////////////////////////
 ////////////////////////// /////////////////////////////
