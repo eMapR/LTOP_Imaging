@@ -1,15 +1,42 @@
+//######################################################################################################## 
+//#                                                                                                    #\\
+//#                                         LANDTRENDR LIBRARY                                         #\\
+//#                                                                                                    #\\
+//########################################################################################################
 
-var table = ee.FeatureCollection("users/emaprlab/LTOP_Oregon_Kmeans_Cluster_ID_reps")
+// date: 2020-12-10
+// author: Peter Clary    | clarype@oregonstate.edu
+//         Robert Kennedy | rkennedy@coas.oregonstate.edu
+// website: https://github.com/eMapR/LT-GEE
+
+//  This program takes a sample of points and extracts the spectral time series of transformed LandSat 
+//  imagery, and stores those time series as attributes in the sample point attribute table. The program 
+//  then exports a CSV file containing the point’s attribute table.
+
+//////////////////////////////////////////////////////////
+//////////////////Import Modules ////////////////////////////
+////////////////////////// /////////////////////////////
+
 var ltgee = require('users/clarype/emapr:Development/LandTrendr_V2.5D.js');
 
+//////////////////////////////////////////////////////////
+///////////Abstract image sample points ////////////////////
+////////////////////////// /////////////////////////////
+
+var table = ee.FeatureCollection("users/emaprlab/SERVIR/v1/clusterSNICseed_32nd_v1_5000_points_cluster_id_sample"),
+    geometry = /* color: #d63000 */ee.Geometry.Point([105.41778730567258, 12.824882879003976]);
+
+//////////////////////////////////////////////////////////
+////////////////// Main function ////////////////////////////
+////////////////////////// /////////////////////////////
 function main () {
   
   // Define the start and the start and end year of the image time series
-  var start_year = 1999;
+  var start_year = 1990;
   var end_year = 2020;
-  var startDay = '06-20'; 
-  var endDay = '09-10'; 
-  var maskThese = ['cloud','shadow', 'snow']
+  var startDay = '11-15'; 
+  var endDay = '03-20'; 
+  var maskThese = ['cloud','shadow']
   
   // Define a feature Collection of the points that need to be extracted
   var points = ee.FeatureCollection(table).sort('cluster_id');
@@ -23,7 +50,7 @@ function main () {
   // var images = ee.ImageCollection("users/JohnBKilbride/test_medoids")
     //.filterDate(ee.Date.fromYMD(start_year, 1, 1), ee.Date.fromYMD(end_year, 12, 31));
   Map.addLayer(annualSRcollection, {min:0, max:[1500,5500,1500], bands:['B7','B4','B3']}, 'image');
-  Map.centerObject(table.geometry(), 11);
+  Map.centerObject(geometry, 11);
 
   
   // Compute the spectral indicies to be extracted
@@ -33,7 +60,7 @@ function main () {
   var extraction_results = run_extraction(images, points, start_year, end_year);
   print(extraction_results.size())
   
-  // Map.addLayer(extraction_results)
+  Map.addLayer(extraction_results)
   // Select out the relevant fields
   var outputs = extraction_results.select(['cluster_id', 'year', 'NBR', 'TCW', 'TCG', 'NDVI', 'B5'], null, false)//.sort('cluster_id');
   print(outputs.size())
@@ -41,8 +68,8 @@ function main () {
   // Export the points
   Export.table.toDrive({
     collection: outputs, 
-    description: "LTOP_Oregon_Abstract_Sample_annualSRcollection_Tranformed_NBRTCWTCGNDVIB5_v1", 
-    fileNamePrefix: "LTOP_Oregon_Abstract_Sample_annualSRcollection_Tranformed_NBRTCWTCGNDVIB5_v1", 
+    description: "SERVIR_abstractSampler_annualSRcollectionTranformed_NBRTCWTCGNDVIB5_sampleTable_v7", 
+    fileNamePrefix: "SERVIR_abstractSampler_annualSRcollectionTranformed_NBRTCWTCGNDVIB5_sampleTable_v7", 
     fileFormat: 'csv'
   });
   
@@ -50,7 +77,10 @@ function main () {
   
 }
 
-// Compute the spectral indices
+//////////////////////////////////////////////////////////
+//////////////// Compute the spectral indices////////////
+////////////////////////// /////////////////////////////
+
 function compute_indices (img) {
   
   // Calculate Tasseled Cap Brightness, Greenness, Wetness
@@ -76,7 +106,9 @@ function compute_indices (img) {
   
 }
 
-// Run the extraction
+///////////////////////////////////////////////////////////////////////////
+//////////////////////// Run the extraction////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
 function run_extraction (images, points, start_year, end_year) {
   
   // Function that is applied to each year
@@ -118,4 +150,3 @@ function run_extraction (images, points, start_year, end_year) {
 
 
 main();
-
