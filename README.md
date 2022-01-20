@@ -160,7 +160,7 @@ With point generated in the pervious step we extract the pixel values from the S
 
 After sampling we select a subset of points. The size of the subset is arbitraray choosen to a size what works in GEE.
 
-	0. Qgis tool - Random selection within subsets
+	0. Qgis tool - Random extract within subsets
 
 	1. Input
 
