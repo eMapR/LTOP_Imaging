@@ -133,7 +133,30 @@ Here we change every pixel in the Seed Image to a point vector except pixels wit
 		./LTOP_Oregon/vectors/01_SNIC/01_snic_seed_pixel_points/01_snic_seed_pixel_points.shp
 
 
-#### 6 Sample SNIC Seed Image with Seed points (QGIS) 
+
+
+
+#### 6 Randomly select a subset of 75k points (QGIS)
+
+After sampling we select a subset of points. The size of the subset is arbitraray choosen to a size what works in GEE.
+
+	0. Qgis tool - Random extract within subsets
+
+	1. Input
+
+		./LTOP_Oregon/vectors/01_SNIC/01_snic_seed_pixel_points/01_snic_seed_pixel_points.shp
+
+	2. Number of selection 
+
+		75000 
+
+		Note: the value above is arbitrary
+
+	3. Save selected features as:
+
+ 				./LTOP_Oregon/vectors/01_SNIC/02_snic_seed_pixel_points_attributted/02_snic_seed_pixel_points_attributted.shp
+
+#### 7 Sample SNIC Seed Image with Seed points (QGIS) 
 
 With point generated in the pervious step we extract the pixel values from the Seed Image across all bands and save them to a attribute table of the point vector file.
 
@@ -141,7 +164,7 @@ With point generated in the pervious step we extract the pixel values from the S
 
 	1. Input point layer
 
-		./LTOP_Oregon/vectors/01_SNIC/01_snic_seed_pixel_points/01_snic_seed_pixel_points.shp
+		./LTOP_Oregon/vectors/01_SNIC/02_snic_seed_pixel_points_attributted/02_snic_seed_pixel_points_attributted.shp
 
 	2. Raster layer 
 
@@ -153,29 +176,7 @@ With point generated in the pervious step we extract the pixel values from the S
 
 	4. Output location 
 
-		./LTOP_Oregon/vectors/01_SNIC/02_snic_seed_pixel_points_attributted/02_snic_seed_pixel_points_attributted.shp
-
-
-#### 7 Randomly select a subset of 75k points (QGIS)
-
-After sampling we select a subset of points. The size of the subset is arbitraray choosen to a size what works in GEE.
-
-	0. Qgis tool - Random extract within subsets
-
-	1. Input
-
-		./LTOP_Oregon/vectors/01_SNIC/02_snic_seed_pixel_points_attributted/02_snic_seed_pixel_points_attributted.shp
-
-	2. Number of selection 
-
-		75000 
-
-		Note: the value above is arbitrary
-
-	3. Save selected features as:
-
- 		./LTOP_Oregon/vectors/01_SNIC/03_snic_seed_pixel_points_attributted_random_subset_75k/03_snic_seed_pixel_points_attributted_random_subset_75k.shp
-
+		./LTOP_Oregon/vectors/01_SNIC/03_snic_seed_pixel_points_attributted_random_subset_75k/03_snic_seed_pixel_points_attributted_random_subset_75k.shp
 
 #### 8 Upload sample to GEE (Moving data)
 
