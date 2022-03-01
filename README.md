@@ -83,8 +83,11 @@ Out first processing step is to make a virual raster from the many Seed Image ch
 		b) build vrt raster with text file 
 
 			gdalbuildvrt snic_image.vrt -input_file_list listOfTiffs.txt
-
-
+			
+			options 2 for only GDAL step ahead: << Testing
+			
+				gdalbuildvrt  -srcnodata 0 snic_image.vrt -input_file_list listOfTiffs.txt
+			
 	4. Inspect and process the merged imagery.
 
 		a) Data location:
