@@ -37,7 +37,7 @@ var endYear = 2020;
 var startDate = '11-20'; 
 var endDate =   '03-10'; 
 var maskThese = ['cloud', 'shadow']
-var fitIndex = "B5"
+//var fitIndex = "B5"
 
 ///////////////////////////////////////////////////////////
 ////////Filter parameter lookup table//////////////////////
@@ -74,12 +74,12 @@ var annualSRcollection = ltgee.buildSRcollection(startYear, endYear, startDate, 
 /////////////////////////////////////////////////////////
 
 //transformed Landsat surface reflectance image collection
-var annualLTcollectionNBR = ltgee.buildLTcollection(annualSRcollection, 'NBR', [fitIndex]); 
-var annualLTcollectionNDVI = ltgee.buildLTcollection(annualSRcollection, 'NDVI', [fitIndex]);
-var annualLTcollectionTCW = ltgee.buildLTcollection(annualSRcollection, 'TCW', [fitIndex]);
-var annualLTcollectionTCG = ltgee.buildLTcollection(annualSRcollection, 'TCG', [fitIndex]);
-var annualLTcollectionB5 = ltgee.buildLTcollection(annualSRcollection, 'B5', [fitIndex]);
-
+var annualLTcollectionNBR = ltgee.buildLTcollection(annualSRcollection, 'NBR', ["NBR"]).select(["NBR","ftv_nbr"],["NBR","ftv_ltop"]); 
+var annualLTcollectionNDVI = ltgee.buildLTcollection(annualSRcollection, 'NDVI', ["NDVI"]).select(["NDVI","ftv_ndvi"],["NDVI","ftv_ltop"]); 
+var annualLTcollectionTCW = ltgee.buildLTcollection(annualSRcollection, 'TCW', ["TCW"]).select(["TCW","ftv_tcw"],["TCW","ftv_ltop"]); 
+var annualLTcollectionTCG = ltgee.buildLTcollection(annualSRcollection, 'TCG', ["TCG"]).select(["TCG","ftv_tcg"],["TCG","ftv_ltop"]); 
+var annualLTcollectionB5 = ltgee.buildLTcollection(annualSRcollection, 'B5', ["B5"]).select(["B5","ftv_b5"],["B5","ftv_ltop"]); 
+print(annualLTcollectionNBR)
 
 /////////////////////////////////////////////////////////
 ///////Apply Select Parameter to Clusters (B5)/////////// 
@@ -414,8 +414,23 @@ print(printer)
 //Mosaic each LandTrendr run in list to single image collection
 var ltcol = ee.ImageCollection(printer).mosaic()
 
+
+var params = { 
+  timeSeries: ee.ImageCollection([]),
+  maxSegments: 10,
+  spikeThreshold: 5,
+  vertexCountOvershoot: 3,
+  preventOneYearRecovery: true,
+  recoveryThreshold: 5,
+  pvalThreshold: 5,
+  bestModelProportion: 0.75,
+  minObservationsNeeded: 5
+};
+
+var lt_vert = ltgee.getLTvertStack(ltcol, params).select([0,1,2,3,4,5,6,7,8,9,10]).int16()
+
 // get fitted data from LandTrendr
-var fittied = ltgee.getFittedData(ltcol, startYear, endYear, fitIndex, [fitIndex],"ftv_").int()
+//var fittied = ltgee.getFittedData(ltcol, startYear, endYear, fitIndex, [fitIndex],"ftv_").int()
 
 // print(image.projection())
 // print(ltcol.projection())
@@ -425,10 +440,24 @@ var fittied = ltgee.getFittedData(ltcol, startYear, endYear, fitIndex, [fitIndex
 
 Map.addLayer(cluster_image,{min:0, max:5000},'cluster')
 Map.addLayer(ltcol,{},'ltcol')
+Map.addLayer(lt_vert,{},'lt_vert')
 // Map.addLayer(fittied,{},'getFittedData')
 // Map.addLayer(annualSRcollection,{},'annualSRcollection')
 // Map.addLayer(annualLTcollectionTCG,{},'annualLTcollection')
-/////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+Export.image.toAsset({
+  image: lt_vert,
+  description: 'Optimized_LandTrendr_year_vert_array',
+  assetId: 'Optimized_LandTrendr_year_vert_array',
+  region: aoi,
+  scale: 30,
+  maxPixels: 10000000000000
+})  
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////
 // Export.image.toDrive({
 //         image:fittied, 
 //         description: 'Optimized_LandTrendr_image_powermask_v1_'+fitIndex, 
@@ -446,5 +475,4 @@ Map.addLayer(ltcol,{},'ltcol')
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
-
 
