@@ -1,4 +1,16 @@
-
+var geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-124.26680212417426, 45.020277044589896],
+          [-124.26680212417426, 44.27581082711985],
+          [-121.06428747573676, 44.27581082711985],
+          [-121.06428747573676, 45.020277044589896]]], null, false);
 
 //######################################################################################################## 
 //#                                                                                                    #\\
@@ -22,13 +34,13 @@
 //////////////////Import Modules ////////////////////////////
 ////////////////////////// /////////////////////////////
 
-var ltgee = require('users/emaprlab/public:LT-data-download/LandTrendr_V2.4.js'); 
+var ltgee = require('users/emaprlab/public:Modules/LandTrendr.js'); 
 
 //////////////////////////////////////////////////////////
 ///////////////////// vector////////////////////////////
 ////////////////////////// /////////////////////////////
 
-var table = ee.FeatureCollection("users/emaprlab/SERVIR/v1/Cambodia");
+var table = ee.FeatureCollection(geometry);
 
 //Centers the map on spatial features 
 var aoi = table.geometry().buffer(5000);
@@ -39,11 +51,11 @@ Map.addLayer(aoi)
 //////////////////// time and mask params//////////////////////////
 ////////////////////////// /////////////////////////////
 
-var startYear = 1999; 
+var startYear = 1990; 
 var endYear = 2020; 
-var startDate = '11-20'; 
-var endDate =   '03-10'; 
-var masked = ['cloud', 'shadow'] // Image masking options ie cloud option tries to remove clouds from the imagery. powermask in new and has magic powers ... RETURN TO THIS AND ADD MORE DETAIL
+var startDate = '04-20'; 
+var endDate =   '09-10'; 
+var masked = ['cloud', 'shadow', 'snow'] // Image masking options ie cloud option tries to remove clouds from the imagery. powermask in new and has magic powers ... RETURN TO THIS AND ADD MORE DETAIL
 
 /////////////////////////////////////////////////////////
 ////////////////////////Landsat Composites///////////////////////////////
@@ -51,8 +63,8 @@ var masked = ['cloud', 'shadow'] // Image masking options ie cloud option tries 
 
 
 var image2020 = ltgee.buildSRcollection(2020, 2020, startDate, endDate, aoi, masked).mosaic()
-var image2010 = ltgee.buildSRcollection(2010, 2010, startDate, endDate, aoi, masked).mosaic()
-var image2000 = ltgee.buildSRcollection(2000, 2000, startDate, endDate, aoi, masked).mosaic()
+var image2010 = ltgee.buildSRcollection(2000, 2000, startDate, endDate, aoi, masked).mosaic()
+var image2000 = ltgee.buildSRcollection(1990, 1990, startDate, endDate, aoi, masked).mosaic()
 
 var LandsatComposites = image2020.addBands(image2010).addBands(image2000)
 
@@ -62,7 +74,7 @@ var LandsatComposites = image2020.addBands(image2010).addBands(image2000)
 
 var snicImagey = ee.Algorithms.Image.Segmentation.SNIC({
   image: LandsatComposites,
-  size: 10, //changes the number and size of patches 
+  size: 5, //changes the number and size of patches 
   compactness: 1, //degrees of irregularity of the patches from a square 
   }).clip(aoi);
   
@@ -80,34 +92,35 @@ var patchRepSeeds = snicImagey.select(['seeds']);
 ///////Select singel pixel from each patch/////////////
 ///////////////////////////////////////////////////////
 
-var SNIC_means_image = patchRepSeeds.multiply(patchRepsMean)//.reproject({  crs: 'EPSG:4326',  scale: 30});//.clip(aoi)
+var seeds_with_snic_values = patchRepSeeds.multiply(patchRepsMean)//.reproject({  crs: 'EPSG:4326',  scale: 30});//.clip(aoi)
 
-Map.addLayer(SNIC_means_image,{"opacity":1,"bands":["B3_mean","B2_mean","B1_mean"],"min":242.47,"max":962.18,"gamma":1},'SNIC_means_image')
+Map.addLayer(seeds_with_snic_values,{"opacity":1,"bands":["B3_mean","B2_mean","B1_mean"],"min":242.47,"max":962.18,"gamma":1},'seeds_with_snic_values')
 
 // //////////////////////////////////
 // //////////////Export SNIC/////////
 // //////////////////////////////////
 
-Export.image.toDrive({
-        image:snicImagey.toInt32().clip(aoi), 
-        description: 'CambodiaSNIC_v1', 
-        folder:'CambodiaSNIC_v1', 
-        fileNamePrefix: "CambodiaSNIC_v1", 
-        region:aoi, 
-        scale:30, 
-        maxPixels: 1e13 
-      })     
+// the whole SNIC image is not needed 
+// Export.image.toDrive({
+//         image:snicImagey.toInt32().clip(aoi), 
+//         description: 'SNIC_image', 
+//         folder:'SNIC_image', 
+//         fileNamePrefix: "SNIC_image", 
+//         region:aoi, 
+//         scale:30, 
+//         maxPixels: 1e13 
+//       })     
       
+// export seed pixels with SNIC band values
 Export.image.toDrive({
-        image:SNIC_means_image.toInt32().clip(aoi), 
-        description: 'CambodiaSNICseed_v1', 
-        folder:'CambodiaSNIC_v1', 
-        fileNamePrefix: "CambodiaSNICseed_v1", 
+        image:seeds_with_snic_values.toInt32().clip(aoi), //int 32 is for the cluster ids ... Do we need them? 
+        description: 'SNICseed_v1', 
+        folder:'ltop_SNIC_v1', 
+        fileNamePrefix: "SNICseed_v1", 
         region:aoi, 
         scale:30, 
         maxPixels: 1e13 
       })   
-
 
 
 
