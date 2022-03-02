@@ -1,4 +1,4 @@
-//######################################################################################################## 
+ //######################################################################################################## 
 //#                                                                                                    #\\
 //#                                         LANDTRENDR LIBRARY                                         #\\
 //#                                                                                                    #\\
@@ -16,42 +16,55 @@
 //  In essence, we are putting the patches into clusters; like sorting clusters of different colored grapes. 
 //  Each of the clusters is given a unique cluster ID so we can keep track of them.
 
+var geometry = 
+    /* color: #d63000 */
+    /* shown: false */
+    /* displayProperties: [
+      {
+        "type": "rectangle"
+      }
+    ] */
+    ee.Geometry.Polygon(
+        [[[-124.26680212417426, 45.020277044589896],
+          [-124.26680212417426, 44.27581082711985],
+          [-121.06428747573676, 44.27581082711985],
+          [-121.06428747573676, 45.020277044589896]]], null, false);
 
 //////////////////////////////////////////////////////////
 //////////////////Import Modules ////////////////////////////
 ////////////////////////// /////////////////////////////
 
-var ltgee = require('users/emaprlab/public:LT-data-download/LandTrendr_V2.4.js'); 
+var ltgee = require('users/emaprlab/public:Modules/LandTrendr.js'); 
 
 //////////////////////////////////////////////////////////
 /////////////////point sample ////////////////////////////
 ///////////////////////////////////////////////////////
 
-var sample = ee.FeatureCollection("users/emaprlab/SERVIR/v2/snic_seed_pixels_points_attributed_randomSubset_75k");
+var sample = ee.FeatureCollection("users/clarype/ltop_snic_seed_polygon_centroids_att_sample_75k_gdal");
 Map.addLayer(sample)
 //////////////////////////////////////////////////////////
 /////////////////////Cambodia vector////////////////////////////
 ////////////////////////// /////////////////////////////
 
 //Centers the map on spatial features 
-var table = ee.FeatureCollection("users/emaprlab/SERVIR/v1/Cambodia");
+var table = ee.FeatureCollection(geometry);
 var aoi = table.geometry().buffer(5000);
 
 //////////////////////////////////////////////////////////
 ////////////////////params//////////////////////////
 ////////////////////////// /////////////////////////////
 
-var startDate = '11-20'; 
-var endDate =   '03-10'; 
-var masked = ['cloud', 'shadow'] // Image masking options ie cloud option tries to remove clouds from the imagery. powermask in new and has magic powers ... RETURN TO THIS AND ADD MORE DETAIL
+var startDate = '04-20'; 
+var endDate =   '09-10'; 
+var masked = ['cloud', 'shadow', 'snow'] // Image masking options ie cloud option tries to remove clouds from the imagery. powermask in new and has magic powers ... RETURN TO THIS AND ADD MORE DETAIL
 
 /////////////////////////////////////////////////////////
 ////////////////////////Landsat Composites///////////////////////////////
 /////////////////////////////////////////////////////////
 
 var image2020 = ltgee.buildSRcollection(2020, 2020, startDate, endDate, aoi, masked).mosaic()
-var image2010 = ltgee.buildSRcollection(2010, 2010, startDate, endDate, aoi, masked).mosaic()
-var image2000 = ltgee.buildSRcollection(2000, 2000, startDate, endDate, aoi, masked).mosaic()
+var image2010 = ltgee.buildSRcollection(2000, 2000, startDate, endDate, aoi, masked).mosaic()
+var image2000 = ltgee.buildSRcollection(1990, 1990, startDate, endDate, aoi, masked).mosaic()
 
 var LandsatComposites = image2020.addBands(image2010).addBands(image2000)
 
@@ -61,15 +74,13 @@ var LandsatComposites = image2020.addBands(image2010).addBands(image2000)
 
 var snicImagey = ee.Algorithms.Image.Segmentation.SNIC({
   image: LandsatComposites,
-  size: 10, //changes the number and size of patches 
+  size: 5, //changes the number and size of patches 
   compactness: 1, //degrees of irregularity of the patches from a square 
   }).clip(aoi);
   
 //////////////////////////////////////////////////////////
 ////////////////////SNIC/////////////////////////////
 ///////////////////////////////////////////////////////
-
-var CambodiaSNIC_v1_QA = ee.Image("users/emaprlab/SERVIR/v2_QAofv1/CambodiaSNIC_v1_QA");
 
 var patchRepsMean = snicImagey.select(["seeds", "clusters",  "B1_mean", "B2_mean",  "B3_mean",  "B4_mean",  "B5_mean",  "B7_mean",  "B1_1_mean",  "B2_1_mean",  "B3_1_mean",  "B4_1_mean",  "B5_1_mean","B7_1_mean",  "B1_2_mean",  "B2_2_mean",  "B3_2_mean",  "B4_2_mean",  "B5_2_mean",  "B7_2_mean"]);
 
@@ -103,9 +114,9 @@ var clusterSeed = SNIC_means_image.cluster(training).clip(aoi);
 
 Export.image.toDrive({
         image:clusterSeed, 
-        description: 'servir_cambodia_snic_seed_points75k_kmeans_5k_cluster_seeds', 
-        folder:'servir_cambodia_snic_seed_points75k_kmeans_5k_cluster_seeds', 
-        fileNamePrefix: "servir_cambodia_snic_seed_points75k_kmeans_5k_cluster_seeds", 
+        description: 'ltop_snic_seed_points75k_kmeans_5k_cluster_seeds', 
+        folder:'ltop_snic_seed_points75k_kmeans_5k_cluster_seeds', 
+        fileNamePrefix: "ltop_snic_seed_points75k_kmeans_5k_cluster_seeds", 
         region:aoi, 
         scale:30, 
         maxPixels: 1e13 
@@ -113,4 +124,3 @@ Export.image.toDrive({
 
 
 Map.centerObject(aoi)
-
