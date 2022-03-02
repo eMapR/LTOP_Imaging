@@ -71,10 +71,6 @@ Since, some areas have several images we need to merge them, and to save a littl
 			Linux:
 	
 				ls -d "$PWD"/* > listOfTiffs.txt
-			
-			windows:
-			
-				dir /b /s >> listOfTiffs.txt
 
 		b) build vrt raster with text file 
 
@@ -102,8 +98,14 @@ Here we change every pixel in the Seed Image to a point vector except pixels wit
 		./LTOP_Oregon/vectors/01_SNIC/01_snic_seed_pixel_points/01_snic_seed_pixel_points.shp
 
 	GDAL Option:
-	1.GDAL Command
 
+		1.GDAL Command
+		
+			gdal_polygonize.py snic_seed.vrt ltop_snic_seed_polygons.shp
+
+			ogr2ogr -f "ESRI Shapefile" -sql "SELECT ST_PointOnSurface(geometry), * FROM ltop_snic_seed_polygons" -dialect sqlite ltop_snic_seed_polygon_centroids.shp ltop_snic_seed_polygons.shp 
+
+			
 
 #### 6 Randomly select a subset of 75k points (QGIS)
 
