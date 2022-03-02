@@ -38,7 +38,7 @@ Here, we move our SNIC datasets to a server for further processing .
 
 	1. Open terminal on Islay in a VNC
 
-	2. Activate conda environment “py35”
+	2. Activate conda environment “py35”. What if they dont have Islay?
 
 		conda activate py35
 
@@ -56,73 +56,39 @@ Here, we move our SNIC datasets to a server for further processing .
 
 #### 3 Merge image chunks into two virtual raster (GDAL)
 
-Out first processing step is to make a virual raster from the many Seed Image chuncks download. 
+Since, some areas have several images we need to merge them, and to save a little space we make a virtual raster. To make a virual raster from the many Seed Image chuncks follow the step below. 
 
 [add seed image]
 
 	1. Activate conda environment
 
-		a) conda activate gdal37
+		a) conda activate gdal37. conda enviroment with GDAL and python 3.7
 
 	2. Build VRT SNIC seed image 
 
 		a) make text file of file path is folder (only tiffs in the folder)
 	
-			ls -d "$PWD"/* > listOfTiffs.txt
+			Linux:
+	
+				ls -d "$PWD"/* > listOfTiffs.txt
+			
+			windows:
+			
+				dir /b /s >> listOfTiffs.txt
 
 		b) build vrt raster with text file 
 
-			gdalbuildvrt snic_seed.vrt -input_file_list listOfTiffs.txt
-
-	3. Build VRT SNIC image 
-
-		a) make text file of file path is folder (only tiffs in the folder)
-
-			ls -d "$PWD"/* > listOfTiffs.txt
-
-		b) build vrt raster with text file 
-
-			gdalbuildvrt snic_image.vrt -input_file_list listOfTiffs.txt
+			gdalbuildvrt -srcnodata 0 snic_seed.vrt -input_file_list listOfTiffs.txt
 			
-			options 2 for only GDAL step ahead: << Testing
-			
-				gdalbuildvrt  -srcnodata 0 snic_image.vrt -input_file_list listOfTiffs.txt
-			
-	4. Inspect and process the merged imagery.
+	3. Inspect and process the merged imagery.
 
 		a) Data location:
 
 			./LTOP_Oregon/rasters/01_SNIC/snic_seed.vrt
 
-			./LTOP_Oregon/rasters/01_SNIC/snic_image.vrt	(I don't think this is used in the work flow?)		
+#### 4 Change the raster calc SNIC Seed Image into a vector of points. Each point corresponds to a seed pixel. 
 
-
-#### 4 Raster calc SNIC Seed Image to keep only seed pixels (QGIS)
-
-Now we set a No Data to 0 making most of the image No Data which is usful in the next step 
-
-[add no data seed image]
-
-	1. Raster calculation (("seed_band">0)*"seed_band") / (("seed_band">0)*1 + ("seed_band"<=0)*0)
-
-	2. Input:
-
-		./LTOP_Oregon/rasters/01_SNIC/snic_seed.vrt
-
-	3. Output: 	
-
-		./LTOP_Oregon/rasters/01_SNIC/snic_seed_pixels.tif
-
-	Note: 
-		This raster calculation change the 0 pixel values to no data in Q-gis. However, this also 
-		changes a seed id pixel to no data as well. But one out of hundreds of millions pixels is 
-		inconsequential.
-
-
-
-#### 5 Change the raster calc SNIC Seed Image into a vector of points. Each point corresponds to a seed pixel. (QGIS)
-
-Here we change every pixel in the Seed Image to a point vector except pixels with no data values.
+Here we change every pixel in the Seed Image to a point vector except pixels with no data values.(You can use GDAL or QGIS)
 
 	1. Qgis tool - Raster pixels to points 
   	 
@@ -135,8 +101,8 @@ Here we change every pixel in the Seed Image to a point vector except pixels wit
 
 		./LTOP_Oregon/vectors/01_SNIC/01_snic_seed_pixel_points/01_snic_seed_pixel_points.shp
 
-
-
+	GDAL Option:
+	1.GDAL Command
 
 
 #### 6 Randomly select a subset of 75k points (QGIS)
