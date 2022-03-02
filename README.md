@@ -126,6 +126,10 @@ After sampling we select a subset of points. The size of the subset is arbitrara
 	3. Save selected features as:
 
  				./LTOP_Oregon/vectors/01_SNIC/02_snic_seed_pixel_points_attributted/02_snic_seed_pixel_points_attributted.shp
+				
+	GDAL Option
+	
+		ogr2ogr -f "ESRI Shapefile" -sql "SELECT * FROM 01_snic_seed_pixel_points ORDER BY RANDOM() LIMIT 75000;" -dialect sqlite ltop_snic_seed_polygon_centroids_att_sample_75k_gdal.shp 01_snic_seed_pixel_points.shp
 
 #### 7 Sample SNIC Seed Image with Seed points (QGIS) 
 
