@@ -194,15 +194,14 @@ Remember in step 1 when I said the SNIC patch are independent of one another eve
 		task to drive 
 
 			Kmeans Cluster seed image to Google drive
-
-				./LTOP_Oregon/rasters/02_Kmeans/LTOP_Oregon_Kmeans_seed_image.tif
+			
+				this snic seed image with K means cluster ids will be used to sample the data space for the landTrendr parammeter selection process. 
 
 		task to assets
 
 			kmeans cluster image to GEE assets
 
-				users/emaprlab/LTOP_Oregon_Kmeans_Cluster_Image
-
+				This image asset will be used in the final screipt as the masking locations
 
 #### 10 Export KMeans seed image to Islay (Moving Data)
 
