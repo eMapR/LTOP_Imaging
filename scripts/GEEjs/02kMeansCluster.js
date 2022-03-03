@@ -40,7 +40,7 @@ var ltgee = require('users/emaprlab/public:Modules/LandTrendr.js');
 /////////////////point sample ////////////////////////////
 ///////////////////////////////////////////////////////
 
-var sample = ee.FeatureCollection("users/clarype/ltop_snic_seed_polygons_centroids_att_sample_75k_gdal");
+var sample = ee.FeatureCollection("users/clarype/ltop_snic_seed_polygon_centroids_sample_75k_att_noNull");
 Map.addLayer(sample)
 //////////////////////////////////////////////////////////
 /////////////////////Cambodia vector////////////////////////////
@@ -56,7 +56,7 @@ var aoi = table.geometry().buffer(5000);
 
 var startDate = '04-20'; 
 var endDate =   '09-10'; 
-var masked = ['cloud', 'shadow', 'snow'] // Image masking options ie cloud option tries to remove clouds from the imagery. powermask in new and has magic powers ... RETURN TO THIS AND ADD MORE DETAIL
+var masked = ['cloud', 'shadow'] // Image masking options ie cloud option tries to remove clouds from the imagery. powermask in new and has magic powers ... RETURN TO THIS AND ADD MORE DETAIL
 
 /////////////////////////////////////////////////////////
 ////////////////////////Landsat Composites///////////////////////////////
@@ -90,7 +90,8 @@ var patchRepSeeds = snicImagey.select(['seeds']);
 ///////Select singel pixel from each patch/////////////
 ///////////////////////////////////////////////////////
 
-var SNIC_means_image = patchRepSeeds.multiply(patchRepsMean).select(["B1_mean", "B2_mean",  "B3_mean",  "B4_mean",  "B5_mean",  "B7_mean",  "B1_1_mean",  "B2_1_mean",  "B3_1_mean",  "B4_1_mean",  "B5_1_mean","B7_1_mean",  "B1_2_mean",  "B2_2_mean",  "B3_2_mean",  "B4_2_mean",  "B5_2_mean",  "B7_2_mean"],["seed__3",  "seed__4",  "seed__5",  "seed__6",  "seed__7",  "seed__8",  "seed__9",  "seed__10",  "seed__11",  "seed__12","seed__13",  "seed__14",  "seed__15",  "seed__16",  "seed__17",  "seed__18",  "seed__19", "seed__20"])//.reproject({  crs: 'EPSG:4326',  scale: 30});//.clip(aoi)
+//var SNIC_means_seed_image = patchRepSeeds.multiply(patchRepsMean).select(["B1_mean", "B2_mean",  "B3_mean",  "B4_mean",  "B5_mean",  "B7_mean",  "B1_1_mean",  "B2_1_mean",  "B3_1_mean",  "B4_1_mean",  "B5_1_mean","B7_1_mean",  "B1_2_mean",  "B2_2_mean",  "B3_2_mean",  "B4_2_mean",  "B5_2_mean",  "B7_2_mean"],["seed_3",  "seed_4",  "seed_5",  "seed_6",  "seed_7",  "seed_8",  "seed_9",  "seed_10",  "seed_11",  "seed_12","seed_13",  "seed_14",  "seed_15",  "seed_16",  "seed_17",  "seed_18",  "seed_19", "seed_20"])//.reproject({  crs: 'EPSG:4326',  scale: 30});//.clip(aoi)
+var SNIC_means_image = patchRepsMean.select(["B1_mean", "B2_mean",  "B3_mean",  "B4_mean",  "B5_mean",  "B7_mean",  "B1_1_mean",  "B2_1_mean",  "B3_1_mean",  "B4_1_mean",  "B5_1_mean","B7_1_mean",  "B1_2_mean",  "B2_2_mean",  "B3_2_mean",  "B4_2_mean",  "B5_2_mean",  "B7_2_mean"],["seed_3",  "seed_4",  "seed_5",  "seed_6",  "seed_7",  "seed_8",  "seed_9",  "seed_10",  "seed_11",  "seed_12","seed_13",  "seed_14",  "seed_15",  "seed_16",  "seed_17",  "seed_18",  "seed_19", "seed_20"])//.reproject({  crs: 'EPSG:4326',  scale: 30});//.clip(aoi)
 
 //////////////////////////////////////////////////////////
 /////////////////Train////////////////////////////
@@ -113,14 +114,23 @@ var clusterSeed = SNIC_means_image.cluster(training).clip(aoi);
 ////////////////////////////////////
 
 Export.image.toDrive({
-        image:clusterSeed, 
-        description: 'ltop_snic_seed_points75k_kmeans_5k_cluster_seeds', 
-        folder:'ltop_snic_seed_points75k_kmeans_5k_cluster_seeds', 
-        fileNamePrefix: "ltop_snic_seed_points75k_kmeans_5k_cluster_seeds", 
+        image:SNIC_means_image, 
+        description: 'ltop_snic_seed_points75k_kmeans_5k_cluster_image', 
+        folder:'ltop_snic_seed_points75k_kmeans_5k_cluster_image', 
+        fileNamePrefix: "ltop_snic_seed_points75k_kmeans_5k_cluster_image", 
         region:aoi, 
         scale:30, 
         maxPixels: 1e13 
 })   
+
+
+Export.image.toAsset({image: SNIC_means_image, 
+            description:"ltop_snic_seed_points75k_kmeans_5k_cluster_image" , 
+            assetId:"ltop_snic_seed_points75k_kmeans_5k_cluster_image" , 
+            region:aoi, 
+            scale:30,
+            maxPixels:1e13, 
+})
 
 
 Map.centerObject(aoi)
