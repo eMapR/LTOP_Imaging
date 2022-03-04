@@ -235,13 +235,25 @@ Download the Kmeans Seed image. This image looks like the SNIC Seed Image but th
 
 Using the SNIC Seed point vector dataset, the output from step 5, we sample the Kmeans Seed Image.
 
-	1. Qgis (TOOL: Sample Raster Values)
+	1. Build VRT K means seed image 
+
+		a) make text file of file path is folder (only tiffs in the folder)
+	
+			Linux:
+	
+				ls -d "$PWD"/* > listOfTiffs.txt
+
+		b) build vrt raster with text file 
+
+			gdalbuildvrt -srcnodata 0 kmeans_seed.vrt -input_file_list listOfTiffs.txt
+
+	2. Qgis (TOOL: Sample Raster Values)
 
 		a)Input 
 
-			./LTOP_Oregon/rasters/02_Kmeans/LTOP_Oregon_Kmeans_seed_image.tif
+			./kmeans_seed_image.tif
 
-			./LTOP_Oregon/vectors/01_SNIC/01_snic_seed_pixel_points/01_snic_seed_pixel_points.shp
+			./01_snic_seed_pixel_points.shp
 
 		b) Output column prefix
 
@@ -250,9 +262,6 @@ Using the SNIC Seed point vector dataset, the output from step 5, we sample the 
 		c) output
 
 			./LTOP_Oregon/vectors/02_Kmeans/LTOP_Oregon_Kmeans_Cluster_IDs.shp
-
-
-
 
 #### 13 Get single point for each Kmeans cluster (Python)
 
