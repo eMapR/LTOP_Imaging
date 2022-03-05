@@ -91,11 +91,11 @@ Here we change every pixel in the Seed Image to a point vector except pixels wit
 
 	2. Input
 
-		./LTOP_Oregon/rasters/01_SNIC/snic_seed_pixels.tif
+		./snic_seed_pixels.tif
 
 	3. Output
 
-		./LTOP_Oregon/vectors/01_SNIC/01_snic_seed_pixel_points/01_snic_seed_pixel_points.shp
+		./snic_seed_pixel_points.shp
 
 	GDAL Option:
 
@@ -103,7 +103,7 @@ Here we change every pixel in the Seed Image to a point vector except pixels wit
 		
 			gdal_polygonize.py snic_seed.vrt ltop_snic_seed_polygons.shp
 
-			ogr2ogr -f "ESRI Shapefile" -sql "SELECT ST_PointOnSurface(geometry), * FROM ltop_snic_seed_polygons" -dialect sqlite ltop_snic_seed_polygon_centroids.shp ltop_snic_seed_polygons.shp 
+			ogr2ogr -f "ESRI Shapefile" -sql "SELECT ST_PointOnSurface(geometry), * FROM ltop_snic_seed_polygons" -dialect sqlite snic_seed_pixel_points.shp ltop_snic_seed_polygons.shp 
 
 			
 
@@ -115,21 +115,21 @@ After sampling we select a subset of points. The size of the subset is arbitrara
 
 	1. Input
 
-		./LTOP_Oregon/vectors/01_SNIC/01_snic_seed_pixel_points/01_snic_seed_pixel_points.shp
+		./LTOP_Oregon/vectors/01_SNIC/01_snic_seed_pixel_points/snic_seed_pixel_points.shp
 
 	2. Number of selection 
 
 		75000 
 
-		Note: the value above is arbitrary
+		Note: the value above is arbitrary and it did not break GEE
 
 	3. Save selected features as:
 
- 				./LTOP_Oregon/vectors/01_SNIC/02_snic_seed_pixel_points_attributted/02_snic_seed_pixel_points_attributted.shp
+ 				./snic_seed_pixel_points_75k.shp
 				
 	GDAL Option
 	
-		ogr2ogr -f "ESRI Shapefile" -sql "SELECT * FROM 01_snic_seed_pixel_points ORDER BY RANDOM() LIMIT 75000;" -dialect sqlite ltop_snic_seed_polygon_centroids_att_sample_75k_gdal.shp 01_snic_seed_pixel_points.shp
+		ogr2ogr -f "ESRI Shapefile" -sql "SELECT * FROM 01_snic_seed_pixel_points ORDER BY RANDOM() LIMIT 75000;" -dialect sqlite snic_seed_pixel_points_75k.shp snic_seed_pixel_points.shp
 
 #### 7 Sample SNIC Seed Image with Seed points (QGIS) 
 
@@ -139,7 +139,7 @@ With point generated in the pervious step we extract the pixel values from the S
 
 	1. Input point layer
 
-		./LTOP_Oregon/vectors/01_SNIC/02_snic_seed_pixel_points_attributted/02_snic_seed_pixel_points_attributted.shp
+		./snic_seed_pixel_points_75k.shp
 
 	2. Raster layer 
 
@@ -151,7 +151,7 @@ With point generated in the pervious step we extract the pixel values from the S
 
 	4. Output location 
 
-		./LTOP_Oregon/vectors/01_SNIC/03_snic_seed_pixel_points_attributted_random_subset_75k/03_snic_seed_pixel_points_attributted_random_subset_75k.shp
+		./snic_seed_pixel_points_75k_att.shp
 
 #### 8 Upload sample to GEE (Moving data)
 
@@ -159,17 +159,13 @@ Here we zip and upload the subset of vector points to GEE.
 
 	1. file location 
 
-		./LTOP_Oregon/vectors/01_SNIC/03_snic_seed_pixel_points_attributted_random_subset_75k/ 
+		./snic_seed_pixel_points_75k_att.shp
 
 	2. Zip shape files in directory
 
-		zip -r 03_snic_seed_pixel_points_attributted_random_subset_75k.zip 03_snic_seed_pixel_points_attributted_random_subset_75k/ 
+		zip -r snic_seed_pixel_points_75k_att.zip snic_seed_pixel_points_75k_att/ 
 
 	3. Up load to GEE as asset
-
-	4. GEE Asset location 
-
-		users/emaprlab/03_snic_seed_pixel_points_attributted_random_subset_75k
 
 #### 9 Kmeans cluster from SNIC patches (GEE) 
 
@@ -209,7 +205,6 @@ Download the Kmeans Seed image. This image looks like the SNIC Seed Image but th
 
 	0. Open terminal on Islay in a VNC
 
-
 	1. Script location 
 
 		./LTOP_Oregon/scripts/GEEjs/
@@ -224,7 +219,7 @@ Download the Kmeans Seed image. This image looks like the SNIC Seed Image but th
 
 	4. Python Command
 
-		python ./LTOP_Oregon/scripts/GEEjs/00_get_chunks_from_gdrive.py LTOP_Oregon_Kmeans_v1 ./LTOP_Oregon/rasters/02_Kmeans/gee/
+		python ./LTOP_Oregon/scripts/GEEjs/00_get_chunks_from_gdrive.py LTOP_Kmeans ./LTOP_Oregon/rasters/02_Kmeans/gee/
 
 	3. output location
 
@@ -245,15 +240,15 @@ Using the SNIC Seed point vector dataset, the output from step 5, we sample the 
 
 		b) build vrt raster with text file 
 
-			gdalbuildvrt -srcnodata 0 kmeans_seed.vrt -input_file_list listOfTiffs.txt
+			gdalbuildvrt -srcnodata 0 kmeans_clusters.vrt -input_file_list listOfTiffs.txt
 
 	2. Qgis (TOOL: Sample Raster Values)
 
 		a)Input 
 
-			./kmeans_seed_image.tif
+			./kmeans_clusters.vrt
 
-			./01_snic_seed_pixel_points.shp
+			./snic_seed_pixel_points.shp
 
 		b) Output column prefix
 
@@ -261,7 +256,7 @@ Using the SNIC Seed point vector dataset, the output from step 5, we sample the 
 
 		c) output
 
-			./LTOP_Oregon/vectors/02_Kmeans/LTOP_Oregon_Kmeans_Cluster_IDs.shp
+			./LTOP_Kmeans_Cluster_IDs.shp
 
 #### 13 Get single point for each Kmeans cluster (Python)
 
@@ -275,11 +270,11 @@ Since our sample contains points for every pixel in the Seed Image there are dup
 
 		a) input shp file:
 
-			./LTOP_Oregon/vectors/02_Kmeans/LTOP_Oregon_Kmeans_Cluster_IDs/LTOP_Oregon_Kmeans_Cluster_IDs.shp
+			./TOP_Oregon_Kmeans_Cluster_IDs.shp
 
 		b) output shp file:
 
-			./LTOP_Oregon/vectors/02_Kmeans/LTOP_Oregon_Kmeans_Cluster_ID_reps/LTOP_Oregon_Kmeans_Cluster_IDs.shp
+			./TOP_Kmeans_Cluster_IDs_5k_sample.shp
 
 	3) conda 
 
@@ -295,15 +290,13 @@ Move the random subset of the Kmeans sample points up to GEE.
 
 	1) location 
 
-		./LTOP_Oregon/vectors/02_Kmeans/LTOP_Oregon_Kmeans_Cluster_ID_reps/
+		./LTOP_Kmeans_Cluster_IDs_5k_sample.shp
 	
 	2) zip folder 
 
-		zip -r LTOP_Oregon_Kmeans_Cluster_ID_reps.zip LTOP_Oregon_Kmeans_Cluster_ID_reps/
+		zip -r .LTOP_Kmeans_Cluster_IDs_5k_sample.zip ./LTOP_Kmeans_Cluster_IDs_5k_sample/
 
 	3) upload to GEE 
-
-		users/emaprlab/LTOP_Oregon_Kmeans_Cluster_ID_reps
 
 #### 15 Sample Landsat Image Collections with the 5000 Kmeans Cluster Points (GEE)
 
@@ -352,13 +345,13 @@ Here we create an abstract image. We start with the table that contains a time s
 [image of move points]
 [image of abstract image] 
 
-	1) Script Location 
+	1) Script n 
 
-		./LTOP_Oregon/scripts/abstractImageSampling/csv_to_abstract_images.py
+		./csv_to_abstract_images.py
 
 	2) Input
 
-		./LTOP_Oregon/tables/abstract_sample_gee/LTOP_Oregon_Abstract_Sample_annualSRcollection_Tranformed_NBRTCWTCGNDVIB5_v1.csv
+		./LTOP_Oregon_Abstract_Sample_annualSRcollection_Tranformed_NBRTCWTCGNDVIB5_v1.csv
 
 	3) Outputs
 
