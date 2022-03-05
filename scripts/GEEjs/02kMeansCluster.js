@@ -108,7 +108,7 @@ var training = ee.Clusterer.wekaCascadeKMeans(5000,5001).train({
 ////////////////////////////////////////
 
 var clusterSeed = SNIC_means_image.cluster(training).clip(aoi);
-var kmeans_seed = SNIC_means_image.addBands(clusterSeed)
+var kmeans_seed = clusterSeed
 ////////////////////////////////////
 ////////////////Kmeans cluster Export//////////////
 ////////////////////////////////////
@@ -124,7 +124,7 @@ Export.image.toDrive({
 })   
 
 
-Export.image.toAsset({image: clusterSeed, 
+Export.image.toAsset({image: kmeans_seed, 
             description:"ltop_snic_seed_points75k_kmeans_5k_cluster_image" , 
             assetId:"ltop_snic_seed_points75k_kmeans_5k_cluster_image" , 
             region:aoi, 
