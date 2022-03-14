@@ -97,7 +97,7 @@ var SNIC_means_image = patchRepsMean.select(["B1_mean", "B2_mean",  "B3_mean",  
 /////////////////Train////////////////////////////
 ///////////////////////////////////////////////////////
 
-var training = ee.Clusterer.wekaCascadeKMeans(5000,5001).train({ 
+var training = ee.Clusterer.wekaCascadeKMeans(5001,5001).train({ 
   features: sample, 
   //real names:["B1_mean", "B2_mean",  "B3_mean",  "B4_mean",  "B5_mean",  "B7_mean",  "B1_1_mean",  "B2_1_mean",  "B3_1_mean",  "B4_1_mean",  "B5_1_mean","B7_1_mean",  "B1_2_mean",  "B2_2_mean",  "B3_2_mean",  "B4_2_mean",  "B5_2_mean",  "B7_2_mean"]
   inputProperties:["seed_3",  "seed_4",  "seed_5",  "seed_6",  "seed_7",  "seed_8",  "seed_9",  "seed_10",  "seed_11",  "seed_12","seed_13",  "seed_14",  "seed_15",  "seed_16",  "seed_17",  "seed_18",  "seed_19", "seed_20"]
