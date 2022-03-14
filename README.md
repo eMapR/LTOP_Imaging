@@ -270,11 +270,11 @@ Since our sample contains points for every pixel in the Seed Image there are dup
 
 		a) input shp file:
 
-			./TOP_Oregon_Kmeans_Cluster_IDs.shp
+			./LTOP_Oregon_Kmeans_Cluster_IDs.shp
 
 		b) output shp file:
 
-			./TOP_Kmeans_Cluster_IDs_5k_sample.shp
+			./LTOP_Kmeans_Cluster_IDs_5k_sample.shp
 
 	3) conda 
 
