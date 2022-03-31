@@ -1,7 +1,6 @@
 //######################################################################################################## 
 //#                                                                                                    #\\
-//#                                     LANDTRENDR OPTIMIZATION                                        #\\
-//#                                     Abstract image sampling                                        #\\
+//#                                         LANDTRENDR LIBRARY                                         #\\
 //#                                                                                                    #\\
 //########################################################################################################
 
@@ -9,7 +8,6 @@
 // author: Peter Clary    | clarype@oregonstate.edu
 //         Robert Kennedy | rkennedy@coas.oregonstate.edu
 // website: https://github.com/eMapR/LT-GEE
-
 //  Abstract Imager
 //
 //  This program takes two inputs: an abstract image (An image where the pixels are not original spatial neighbors. These 
@@ -22,15 +20,16 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+var indice ='TCW'
 
 // Landtrendr test module
-var ltgee = require('users/clarype/emapr:Development/LandTrendr_V2.5D.js'); 
+var ltgee = require('users/emaprlab/public:Modules/LandTrendr.js'); 
 
 // Load in the Abstract image collection
-var images = ee.ImageCollection("users/emaprlab/SERVIR/abstractImageCollection_v6");
+var images = ee.ImageCollection("users/clarype/ltop_test/abstract_image_ltop");
 
 // Import a ID layer
-var id_points = ee.FeatureCollection('users/emaprlab/SERVIR/v1/shapefiles_v6_1');
+var id_points = ee.FeatureCollection('users/clarype/shps');
 
 // Rename the bands (can't upload with names as far as I can tell)
 images = images.select(['b1','b2','b3','b4','b5'],['NBR', 'NDVI', 'TCG', 'TCW', 'B5']);
@@ -86,7 +85,7 @@ var printer = runParams.map(function(param){
   var index = runParams.indexOf(param) 
   
   // here we select the indice image on which to run LandTrendr 
-  runParams[index].timeSeries = images.select(['B5']);
+  runParams[index].timeSeries = images.select([indice]);
     
   // run LandTrendr 
   var lt = ee.Algorithms.TemporalSegmentation.LandTrendr(runParams[index])
@@ -113,10 +112,11 @@ var printer = runParams.map(function(param){
   // maps over a feature collection that holds the LandTrendr data and adds attributes : index, params and param number.
   var attriIndexToData = getpin2.map(function(feature){
     
-    return feature.set('index', 'B5')
+    return feature.set('index', indice)
                   .set('params',runParams[index])
                   .set('param_num', index);
-    })
+    
+  })
 
   return attriIndexToData
 
@@ -137,8 +137,8 @@ for(var i in printer ){
 // export the lt featrue collection as a csv file
 Export.table.toDrive({
   collection: featCol,
-  description: "SERVIR_abstractImageSample_5000pts_lt_144params_B5_v1",
-  folder: "SERVIR_abstractImageSamples_5000pts_v1",
+  description: "SERVIR_abstractImageSample_5001pts_lt_144params_"+indice+"_v1",
+  folder: "SERVIR_abstractImageSamples_5001pts_v1",
   fileFormat: 'CSV'
 });
 
@@ -148,6 +148,5 @@ Map.addLayer(images,  {min:[0,-500,0], max:[1000,1000,1500]}, 'Abstract Collecti
 Map.addLayer(id_points, {}, 'ID Points');
 Map.centerObject(images, 16);
 Map.addLayer(featCol,{},'featCol')
-
 
 
