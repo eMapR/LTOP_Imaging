@@ -3,7 +3,7 @@
 //#                                         LANDTRENDR LIBRARY                                         #\\
 //#                                                                                                    #\\
 //########################################################################################################
-
+ 
 // date: 2020-12-10
 // author: Peter Clary    | clarype@oregonstate.edu
 //         Robert Kennedy | rkennedy@coas.oregonstate.edu
@@ -13,18 +13,19 @@
 //  imagery, and stores those time series as attributes in the sample point attribute table. The program 
 //  then exports a CSV file containing the point’s attribute table.
 
+
 //////////////////////////////////////////////////////////
 //////////////////Import Modules ////////////////////////////
 ////////////////////////// /////////////////////////////
 
-var ltgee = require('users/clarype/emapr:Development/LandTrendr_V2.5D.js');
+var ltgee = require('users/emaprlab/public:Modules/LandTrendr.js'); 
 
 //////////////////////////////////////////////////////////
 ///////////Abstract image sample points ////////////////////
 ////////////////////////// /////////////////////////////
 
-var table = ee.FeatureCollection("users/emaprlab/SERVIR/v1/clusterSNICseed_32nd_v1_5000_points_cluster_id_sample"),
-    geometry = /* color: #d63000 */ee.Geometry.Point([105.41778730567258, 12.824882879003976]);
+var table = ee.FeatureCollection("users/clarype/kmeans_sample_5k"),
+    geometry = /* color: #d63000 */ee.Geometry.Point([-122.91778730567258, 44.524882879003976]);
 
 //////////////////////////////////////////////////////////
 ////////////////// Main function ////////////////////////////
@@ -34,9 +35,10 @@ function main () {
   // Define the start and the start and end year of the image time series
   var start_year = 1990;
   var end_year = 2020;
-  var startDay = '11-15'; 
-  var endDay = '03-20'; 
-  var maskThese = ['cloud','shadow']
+  var startDay = '04-20'; 
+  var endDay =   '09-10'; 
+  var masked = ['cloud', 'shadow'] // Image masking options ie cloud option tries to remove clouds from the imagery. powermask in new and has magic powers ... RETURN TO THIS AND ADD MORE DETAIL
+
   
   // Define a feature Collection of the points that need to be extracted
   var points = ee.FeatureCollection(table).sort('cluster_id');
@@ -45,7 +47,7 @@ function main () {
   print(points.size())
   
   // Load in the Image Collection
-  var annualSRcollection = ltgee.buildSRcollection(start_year, end_year, startDay, endDay, points,maskThese)
+  var annualSRcollection = ltgee.buildSRcollection(start_year, end_year, startDay, endDay, points,masked)
   
   // var images = ee.ImageCollection("users/JohnBKilbride/test_medoids")
     //.filterDate(ee.Date.fromYMD(start_year, 1, 1), ee.Date.fromYMD(end_year, 12, 31));
@@ -68,8 +70,8 @@ function main () {
   // Export the points
   Export.table.toDrive({
     collection: outputs, 
-    description: "SERVIR_abstractSampler_annualSRcollectionTranformed_NBRTCWTCGNDVIB5_sampleTable_v7", 
-    fileNamePrefix: "SERVIR_abstractSampler_annualSRcollectionTranformed_NBRTCWTCGNDVIB5_sampleTable_v7", 
+    description: "ltop_abstractSampler_annualSRcollectionTranformed_NBRTCWTCGNDVIB5_sampleTable", 
+    fileNamePrefix: "ltop_abstractSampler_annualSRcollectionTranformed_NBRTCWTCGNDVIB5_sampleTable", 
     fileFormat: 'csv'
   });
   
