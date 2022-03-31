@@ -347,7 +347,7 @@ Here we create an abstract image. We start with the table that contains a time s
 
 	1) Script n 
 
-		./csv_to_abstract_images.py
+		./csv_to_abstract_images_v2.py
 
 	2) Input
 
